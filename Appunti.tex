@@ -1,0 +1,46 @@
+\documentclass[12pt, a4paper]{report}
+\usepackage[utf8]{inputenc}
+\input{variables.tex}
+\input{titlePage.tex}
+\preamble
+
+\begin{document}
+    \customTitlePage{Teoria degli Automi e Calcolabilità}{Lorenzo Vaccarecci}{Anno Accademico 2024/2025}{Università degli Studi di Genova}
+    \newpage
+    \tableofcontents
+    \chapter{Preliminari}
+        \section{Alfabeti, stringhe, linguaggi}
+            \begin{definition}[Alfabeto]
+                Un alfabeto è un insieme finito non vuoto di oggetti detti simboli.
+            \end{definition}
+            \begin{definition}[Stringa]
+                Una stringa $u$ su un alfabeto $\Sigma$ è una funzione totale da $\left[1,n\right]$ in $\Sigma$ per un qualche $n \in \mathbb{N}$. $n$ si dice lunghezza di $u$ e si indica con $|u|$. Useremo $\sigma$ per indicare generici simboli e $u,v,w$ per indicare generiche stringhe. La stringa vuota ($|u|=0$) si indica con $\Lambda$ o $\varepsilon$. $\Sigma^{*}$ è l'insieme di tutte le stringhe su $\Sigma$ ed è sempre un insieme infinito.
+            \end{definition}
+            \begin{equation*}
+                \begin{split}
+                    &\Sigma = \left\{a,b\right\} \rightarrow  \text{insieme di simboli}\\
+                    &\Sigma^{*} = \left\{\varepsilon,a,b,aa,ab,\ldots\right\} \rightarrow \text{insieme delle possibili combinazioni di} \Sigma\\
+                \end{split}
+            \end{equation*}
+            \begin{definition}[Linguaggio]
+                Un linguaggio su un alfabeto $\Sigma$ è un insieme di stringhe su $\Sigma$, ossia un sottoinsieme di $\Sigma^{*}$. Useremo $L$ per indicare generici linguaggi. L'insieme vuoto $\emptyset$ e l'insieme costituito solo dalla stringa vuota $\left\{\varepsilon\right\}$ sono linguaggi su qualunque alfabeto.
+            \end{definition}
+            In genere, scriviamo le stringhe utilizzando la rappresentazione per \textbf{giustapposizione}, cioè  semplicemente scrivendo i simboli uno dopo l'altro da sinistra a destra. Questa rappresentazione è arbitraria e può risultare  ambigua, mentre la definizione 1.1.2 è rigorosa e indipendente dalla rappresentazione.
+            \begin{definition}[Concatenazione]
+                \begin{equation*}
+                    \begin{split}
+                        &u:\left[1..n\right]\rightarrow \Sigma \quad v:\left[1..m\right]\rightarrow \Sigma\\
+                        &u\cdot v:\left[1..n+m\right] \rightarrow \Sigma \\
+                        &(u\cdot v)(i) = \begin{cases}
+                            u(i) & \text{se } 1\leq i \leq n\\
+                            v(i-n) & \text{se } n < i \leq n+m
+                        \end{cases}
+                    \end{split}
+                \end{equation*}
+                \textbf{Definizione induttiva}: $u^{0}=\epsilon,u^{n+1}=u\cdot u^{n}$
+            \end{definition}
+            \begin{definition}[Operazioni su linguaggi]
+                Se $L$ e $L'$ sono linguaaggi, $L\cdot L'=\{u\cdot v | u\in L,v\in L'\}$. Scriveremo anche semplicemente $LL'$. Inoltre $L^{n}$, per $n\geq 0$, è definito induttivamente da $L^{0}=\left\{\epsilon\right\},L^{n+1}=L\cdot L^{n}$. Infine, la \textbf{chiusura di Kleene} $L^{*}$ di un linguaggio è definita da $L^{*}=\bigcup_{n\geq 0}L^{n}$, e la \textbf{chiusura positiva} $L^{+}$ da $L^{+}=\bigcup_{n>0}L^{n}$.\\
+                Questa operazione ha come identità l'insieme $\left\{\epsilon\right\}$, mentre l''insieme vuoto costituisce uno zero dell'operazione: $L\cdot\emptyset=\emptyset\cdot L=\emptyset$
+            \end{definition}
+\end{document}
