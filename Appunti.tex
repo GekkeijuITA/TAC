@@ -1,46 +1,271 @@
 \documentclass[12pt, a4paper]{report}
 \usepackage[utf8]{inputenc}
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+    {\normalfont\huge\bfseries}
+    {} 
+    {0pt}
+    {\Huge Capitolo~\thechapter: }
+
+\titlespacing*{\chapter}{0pt}{50pt}{40pt}
+
 \input{variables.tex}
 \input{titlePage.tex}
-\preamble
 
+\preamble
 \begin{document}
     \customTitlePage{Teoria degli Automi e Calcolabilità}{Lorenzo Vaccarecci}{Anno Accademico 2024/2025}{Università degli Studi di Genova}
     \newpage
     \tableofcontents
     \chapter{Preliminari}
         \section{Alfabeti, stringhe, linguaggi}
-            \begin{definition}[Alfabeto]
-                Un alfabeto è un insieme finito non vuoto di oggetti detti simboli.
-            \end{definition}
-            \begin{definition}[Stringa]
-                Una stringa $u$ su un alfabeto $\Sigma$ è una funzione totale da $\left[1,n\right]$ in $\Sigma$ per un qualche $n \in \mathbb{N}$. $n$ si dice lunghezza di $u$ e si indica con $|u|$. Useremo $\sigma$ per indicare generici simboli e $u,v,w$ per indicare generiche stringhe. La stringa vuota ($|u|=0$) si indica con $\Lambda$ o $\varepsilon$. $\Sigma^{*}$ è l'insieme di tutte le stringhe su $\Sigma$ ed è sempre un insieme infinito.
-            \end{definition}
-            \begin{equation*}
-                \begin{split}
-                    &\Sigma = \left\{a,b\right\} \rightarrow  \text{insieme di simboli}\\
-                    &\Sigma^{*} = \left\{\varepsilon,a,b,aa,ab,\ldots\right\} \rightarrow \text{insieme delle possibili combinazioni di} \Sigma\\
-                \end{split}
-            \end{equation*}
-            \begin{definition}[Linguaggio]
-                Un linguaggio su un alfabeto $\Sigma$ è un insieme di stringhe su $\Sigma$, ossia un sottoinsieme di $\Sigma^{*}$. Useremo $L$ per indicare generici linguaggi. L'insieme vuoto $\emptyset$ e l'insieme costituito solo dalla stringa vuota $\left\{\varepsilon\right\}$ sono linguaggi su qualunque alfabeto.
-            \end{definition}
-            In genere, scriviamo le stringhe utilizzando la rappresentazione per \textbf{giustapposizione}, cioè  semplicemente scrivendo i simboli uno dopo l'altro da sinistra a destra. Questa rappresentazione è arbitraria e può risultare  ambigua, mentre la definizione 1.1.2 è rigorosa e indipendente dalla rappresentazione.
-            \begin{definition}[Concatenazione]
+            \begin{definitionbox}{Alfabeto}{}
+                Insieme finito \textbf{non vuoto} di oggetti detti \textit{simboli}.
+            \end{definitionbox}
+            \begin{definitionbox}{Stringa}{}
+                Una stringa $u$ su un alfabeto $\Sigma$ è una funzione totale da $[1,n]$ in $\Sigma$, per qualche $n\in\mathbb{N}$. 
+                $n$ si dice \textit{lunghezza} di $u$ e si indica con $|u|$. 
+            \end{definitionbox}
+            \begin{itemize}
+                \item $[1,n]\rightarrow$ sono le posizioni dei simboli all'interno della stringa 
+                \item Per \textbf{funzione totale} intendiamo che per ogni posizione nell'intervallo $[1,n]$ deve avere un simbolo corrispondente 
+            \end{itemize}
+            Da ora in poi: 
+            \begin{itemize}
+                \item $\sigma\rightarrow$ simboli generici 
+                \item $u,v,w\rightarrow$ stringhe generiche 
+                \item $\bigwedge\text{ o }\varepsilon\rightarrow$ stringa vuota con lunghezza zero ($\left|\bigwedge\right|=0$ o $\left|\varepsilon\right|=0$) 
+            \end{itemize}
+            \begin{definitionbox}{Linguaggio $L$}{}
+                E' un insieme di stringhe su $\Sigma$, ossia un sottoinsieme di $\Sigma^*$ \textbf{infinito e numerabile}. 
+            \end{definitionbox}
+            \begin{itemize}
+                \item \textbf{Infinito}: contiene un numero illimitato di elementi 
+                \item \textbf{Numerabile}: esiste una funzione iniettiva da $\Sigma^*$ all'insieme dei numeri naturali $\mathbb{N}$ 
+            \end{itemize}
+            L'insieme $\emptyset$ è un linguaggio che non contiene alcun elemento (neanche la stringa vuota). 
+            L'insieme $\{\varepsilon\}$ è composto solo da una stringa di lunghezza 0. 
+            \textit{Esempio:}
+            \begin{itemize}
+                \item $\Sigma=\{a,b\}$ 
+                \item $L=\Sigma^*=\{\varepsilon, a, b, aa, ab, ba, bb, aaa, aab, \ldots\}$ 
+            \end{itemize}
+            \textbf{Un linguaggio può non contenere $\varepsilon$}. 
+            \begin{definitionbox}{Operazioni su stringhe (concatenazione)}{}
+                Se $u$ e $v$ sono stringhe di lunghezza $n$ ed $m$ rispettivamente, allora $u\cdot v$ è la stringa di lunghezza $n+m$, definita da 
+                \begin{equation*}
+                    (u\cdot v)(k)=\begin{cases}
+                        u(k) & \text{se } 1\leq k\leq n\\
+                        v(k-n) & \text{se } n<k\leq n+m 
+                    \end{cases}
+                \end{equation*}
+                Questa operazione è \underline{associativa}. 
+            \end{definitionbox}
+            \begin{definitionbox}{Operazioni su linguaggi (concatenazione)}{}
+                Se $L$ e $L'$ sono linguaggi, $L\cdot L'=\{u\cdot v\mid u\in L, v\in L'\}$. 
+                Se si esegue: 
                 \begin{equation*}
                     \begin{split}
-                        &u:\left[1..n\right]\rightarrow \Sigma \quad v:\left[1..m\right]\rightarrow \Sigma\\
-                        &u\cdot v:\left[1..n+m\right] \rightarrow \Sigma \\
-                        &(u\cdot v)(i) = \begin{cases}
-                            u(i) & \text{se } 1\leq i \leq n\\
-                            v(i-n) & \text{se } n < i \leq n+m
-                        \end{cases}
+                        &L\cdot \{\varepsilon\}=L \qquad L\cdot \emptyset = \emptyset \\
+                        &L^0=\left\{\varepsilon\right\} \qquad L^{n+1}=L\cdot L^n \qquad \text{con } n\geq 0 
                     \end{split}
                 \end{equation*}
-                \textbf{Definizione induttiva}: $u^{0}=\epsilon,u^{n+1}=u\cdot u^{n}$
-            \end{definition}
-            \begin{definition}[Operazioni su linguaggi]
-                Se $L$ e $L'$ sono linguaaggi, $L\cdot L'=\{u\cdot v | u\in L,v\in L'\}$. Scriveremo anche semplicemente $LL'$. Inoltre $L^{n}$, per $n\geq 0$, è definito induttivamente da $L^{0}=\left\{\epsilon\right\},L^{n+1}=L\cdot L^{n}$. Infine, la \textbf{chiusura di Kleene} $L^{*}$ di un linguaggio è definita da $L^{*}=\bigcup_{n\geq 0}L^{n}$, e la \textbf{chiusura positiva} $L^{+}$ da $L^{+}=\bigcup_{n>0}L^{n}$.\\
-                Questa operazione ha come identità l'insieme $\left\{\epsilon\right\}$, mentre l''insieme vuoto costituisce uno zero dell'operazione: $L\cdot\emptyset=\emptyset\cdot L=\emptyset$
-            \end{definition}
+                \begin{itemize}
+                    \item \textbf{Chiusura di Kleene $L^*$}: $L^*=\cup_{n\geq 0}L^{n}\rightarrow$ collezione di tutte le sequenze possibili di elementi di $L$, inclusa la stringa vuota ($L^0$). 
+                    \textit{Esempio:}
+                    \begin{itemize}
+                        \item $\Sigma=\{a,b\}$ 
+                        \item $L=\{a\}$ 
+                        \item $L^*=\{\varepsilon, a, aa, aaa, \ldots, a^n\}$ 
+                    \end{itemize}
+                    \item \textbf{Chiusura positiva $L^+$}: $L^+=\cup_{n>0}L^n\rightarrow$ differisce da $L^*$ solo per l'esclusione della stringa vuota, a meno che $L$ stesso contenga $\varepsilon$. 
+                    \textit{Esempio:}
+                    \begin{itemize}
+                        \item $L^+=\{a, aa, aaa, \ldots, a^n\}$ 
+                    \end{itemize}
+                \end{itemize}
+                Questa operazione è \underline{associativa}.
+            \end{definitionbox}
+    \chapter{Automi a stati finiti}
+        \section{Linguaggi regolari}
+            \subsection{Automi a stati finiti}
+                \begin{definitionbox}{Automa a stato finito deterministico (DFA)}{}
+                    E' una quintupla $\mathcal{M}=\langle Q,\Sigma, \delta, q_0, F\rangle$ dove:
+                    \begin{itemize}
+                        \item $Q$ è un insieme finito di stati
+                        \item $\Sigma$ è un alfabeto di input
+                        \item $\delta:Q\times\Sigma\rightarrow Q$ è una funzione totale detta \textbf{funzione di transizione} ovvero stabilisce come l'automa si muove da uno stato all'altro in base al simbolo che legge dall'input
+                        \item $q_0\in Q$ è lo stato iniziale
+                        \item $F\subseteq Q$ è l'insieme degli stati finali
+                    \end{itemize}
+                \end{definitionbox}
+                La definizione del sistema di transizione associato a un DFA $\mathcal{M}$ è:
+                \begin{itemize}
+                    \item \textbf{Configurazioni}: sono rappresentate da una coppia $\langle q,u \rangle$: \begin{itemize}
+                        \item $q\in Q$ è lo stato corrente in cui si trova l'automa
+                        \item $u\in\Sigma^*$ è la parte della stringa di input che deve ancora essere letta
+                    \end{itemize}
+                    \item \textbf{Relazione di Riduzione (o Transizione)}: la relazione di riduzione, indicata con $\to$, definisce come l'automa si muove da una configurazione all'altra: \begin{equation*}
+                        \langle q,\sigma u\rangle\to\langle q',u\rangle \text{ se } \delta(q,\sigma)=q'
+                    \end{equation*} \begin{itemize}
+                        \item Significa che l'automa è nello stato $q$ e il prossimo simbolo da leggere è $\sigma$ (con $u$ come resto della stringa) e $\delta$ porta dallo stato $q$ allo stato $q'$ leggendo $\sigma$, allora l'automa si sposta nello stato $q'$ e il simbolo $\sigma$ viene "consumato" dall'input
+                        \item Questa relazione di riduzione è \textbf{deterministica} (per ogni configurazione, c'è al più una transizione possibile) e \textbf{terminante} (ad ogni passo viene consumato un simbolo, quindi la computazione termina sempre)
+                    \end{itemize}
+                    \item \textbf{Configurazioni di Arresto (Halting Configurations)}: Le configurazioni di arresto sono quelle in cui non ci sono più simboli da leggere, quindi nella forma $\langle q,\varepsilon\rangle$. Un DFA non si blocca mai prima di aver letto tutto l'input, dato che la sua funzione di transizione $\delta$ è totale.
+                    \item \textbf{Direttive di Input/Output}: Queste definiscono come l'input viene processato e come viene determinato il risultato finale: \begin{itemize}
+                        \item \textbf{Input ($f_{IN}(u)$)}: data la stringa di input $u$, la configurazione iniziale è $f_{IN}(u)=\langle q_0, u\rangle$
+                        \item \textbf{Output ($f_{OUT}(\langle q,u\rangle)$)}: il risultato di una computazione viene estratto dalla configurazione finale $\langle q,u\rangle$ nel modo seguente: \begin{equation*}
+                            f_{OUT}(\langle q,u\rangle) = \begin{cases}
+                                \text{True} & q\in F, u=\varepsilon\Rightarrow\text{ tutta la stringa è stata letta}\\
+                                \text{False} & \text{altrimenti} 
+                            \end{cases}
+                        \end{equation*}
+                    \end{itemize}
+                    \item \textbf{Linguaggio accettato}: Il linguaggio $L(\mathcal{M})$ riconosciuto da un DFA $\mathcal{M}$ è l'insieme di tutte le stringhe $u$ tali per cui, partendo dalla configurazione iniziale $\langle q_0, u\rangle$, l'automa raggiunge una configurazione $\langle q,\varepsilon\rangle$. Formalmente: \begin{equation*}
+                        L(\mathcal{M})=\left\{u\mid\langle q_0,u\rangle\to^*\langle q,\varepsilon\rangle, \text{ per qualche } q\in F\right\}
+                    \end{equation*}
+                    Esiste un modo equivalente per definire il linguaggio accettato, che utilizza una funzione di transizione estesa $\hat{\delta}:Q\times\Sigma^*\to Q$: \begin{itemize}
+                        \item $\hat{\delta}(q, \varepsilon) = q$ (leggendo la stringa vuota, si rimane nello stato corrente)
+                        \item $\hat{\delta}(q, u\sigma) = \delta(\hat{\delta}(q, u), \sigma)$ (per leggere una stringa $u$ seguita da un simbolo $\sigma$, si calcola prima lo stato raggiunto dopo aver letto $u$, e da quello stato si applica la funzione $\delta$ per leggere $\sigma$)
+                    \end{itemize}
+                    Una stringa $u$ è accettata se $\hat{\delta}(q_0, u) \in F$. Il linguaggio accettato (riconosciuto) da $\mathcal{M}$ è quindi: \begin{equation*}
+                        L(\mathcal{M})=\left\{u\mid\hat{\delta}(q_0,u)\in F\right\}
+                    \end{equation*}
+                    I \textbf{linguaggi regolari} sono quelli accettati da qualche DFA.  
+                \end{itemize}
+                \begin{exercise}
+                    \textit{Proviamo che $\emptyset,\{\varepsilon\}$ e $\Sigma^*$ sono insiemi regolari.}
+                    \begin{itemize}
+                        \item $\emptyset$: Per essere accettato abbiamo bisogno che $\mathcal{M}=\langle Q,\Sigma, \delta, q_0, F=\emptyset\rangle$ perchè $\emptyset\in F$ e perchè non viene accettato da quelle $\mathcal{M}\mid F\neq\emptyset$
+                        \item $\{\varepsilon\}$: $F=\{q_0\}$ per definizione, quindi: \begin{itemize}
+                            \item $Q=\{q_0,q_1\}$
+                            \item $\Sigma$ qualunque ad esempio $\{a\}$
+                            \item $\delta$ \begin{itemize}
+                                \item $\delta(q_0,a)=q_1$
+                                \item $\delta(q_1,a)=q_1$
+                            \end{itemize} 
+                        \end{itemize}
+                        Quindi $\{\varepsilon\}$ è accettato perchè la DFA ha come solo stato finale $q_0$ e se dessimo in input la stringa "aa" porterebbe allo stato $q_1$ non finale e rimarrebbe bloccato lì ma $q_1\notin F$ quindi viene rifiutata.
+                        \item $\Sigma^*$: Possiamo costruire una $\mathcal{M}$ molto semplice \begin{itemize}
+                            \item $Q=\{q_0\}$
+                            \item $F=\{q_0\}$
+                            \item $\delta$\begin{itemize}
+                                \item $\delta(q_0,\sigma)=q_0$
+                            \end{itemize}
+                        \end{itemize}
+                        In questo modo qualsiasi sia l'alfabeto, l'automa consuma l'input e quando la stringa è vuota viene accettata.
+                    \end{itemize}
+                \end{exercise}
+                \newpage
+                Un DFA può essere rappresentato come un grafo orientato etichettato detto \textbf{grafo di transizione}
+                \begin{center}
+                    \includegraphics[width=0.3\textwidth]{Images/dfagraph.png}
+                \end{center}
+                Oppure dando una matrice di transizione
+                \begin{center}
+                    \begin{tabular}{|c|c|c|}
+                        \hline
+                         & 0 & 1 \\
+                        \hline
+                        $\displaystyle \to q_0$ & $q_1$ & $q_2$\\
+                        \hline
+                        $*q_1$& $q_1$ & $q_1$ \\
+                        \hline
+                        $q_2$ & $q_1$ & $q_0$ \\
+                        \hline
+                    \end{tabular}
+                \end{center}
+                Dove lo stato iniziale è indicato con $\to$ e lo stato finale con $*$.
+                \begin{definitionbox}{Automa a stato finito non deterministico (NFA)}{}
+                    E' una quintupla $\mathcal{M}=\langle Q,\Sigma, \delta, q_0, F\rangle$ dove $\delta:Q\times\Sigma\to\wp(Q)$.\\
+                    $\wp(Q)$ mappa un \textbf{insieme di stati}, cioè l'insieme di tutti i sottoinsiemi possibili di $Q$. Ad esempio se abbiamo $Q=\{q_0,q_1,q_2\}$, $\wp(Q)=\left\{\{q_0\},\{q_1\},\{q_2\},\{q_0,q_1\},\ldots,\{q_0,q_1,q_2\}\right\}$
+                \end{definitionbox}
+                Analogamente ai DFA, un NFA può essere rappresentato in due modi principali:
+                \begin{itemize}
+                    \item \textbf{Grafo di transizione}: rimane concettualmente la stessa dei DFA
+                    \item \textbf{Tabella di transizione}: ogni casella della tabella (corrispondente a una coppia stato/simbolo) può contenere un insieme di stati
+                \end{itemize}
+                Il comportamento di un NFA è descritto da un sistema di transizione:
+                \begin{itemize}
+                    \item \textbf{Configurazioni}: Sono della forma $\langle q, u \rangle$, dove $q \in Q$ è lo stato corrente e $u \in \Sigma^*$ è la stringa ancora da leggere
+                    \item \textbf{Relazione di riduzione}: È definita come: $\langle q, \sigma u \rangle \to \langle q', u \rangle$ se $q' \in \delta(q, \sigma)$. \textbf{Non è deterministica} ma comunque \textbf{terminante}, poichè a ogni passo viene consumato un simbolo di input (a meno che non si blocchi)
+                    \item \textbf{Configurazioni di arresto}: Un NFA può bloccarsi in due modi: \begin{enumerate}
+                        \item Quando ha letto tutta la stringa: $\langle q, \varepsilon \rangle$
+                        \item Quando si trova in una configurazione $\langle q, \sigma u \rangle$ ma non esistono transizioni possibili per il simbolo $\sigma$ dallo stato $q$ (cioè $\delta(q, \sigma) = \emptyset$)
+                    \end{enumerate}
+                    \item \textbf{Direttive di Input/Output}: Le direttive di input/output sono simili a quelle dei DFA: \begin{itemize}
+                        \item \textbf{Input}: $f_{IN}(u) = \langle q_0, u \rangle$
+                        \item \textbf{Output}: $f_{OUT}=\begin{cases}
+                            \langle q, u \rangle = \text{True} & \text{se }q \in F, u = \varepsilon\\
+                            \text{False} & \text{altrimenti}
+                        \end{cases}$
+                    \end{itemize}
+                    \item \textbf{Linguaggio Accettato}: Il linguaggio $L(\mathcal{M})$ accettato (o riconosciuto) da un NFA $\mathcal{M}$ è l'insieme delle stringhe $u$ per cui esiste almeno una computazione che, partendo dalla configurazione iniziale $\langle q_0, u \rangle$, raggiunge una configurazione $\langle q, \varepsilon \rangle$ dove $q$ è uno stato finale. Questo è un punto chiave del non determinismo: basta una computazione accettante tra tutte quelle possibili.\\
+                    Un modo equivalente per definire il linguaggio accettato usa la funzione estesa $\hat{\delta} : Q \times \Sigma^* \to \wp(Q)$: \begin{itemize}
+                        \item $\hat{\delta}(q, \varepsilon) = {q}$
+                        \item $\hat{\delta}(q, u\sigma) = \bigcup_{q' \in \hat{\delta}(q, u)} \delta(q', \sigma)$
+                    \end{itemize}
+                    Con questa definizione, una stringa $u$ è accettata se e solo se esiste uno stato $q$ nell'insieme $\hat{\delta}(q_0, u)$ che sia uno stato finale ($q \in F$). In altre parole, $L(M) = {u \mid \hat{\delta}(q_0, u) \cap F \neq \emptyset }$
+                \end{itemize}
+                \begin{theorembox}{Rabin-Scott}{}
+                    Sia $\mathcal{M}=\langle Q,\Sigma,\delta_N,q_0,F_N\rangle$ un NFA. Allora esiste un DFA $\mathcal{M}_D$ tale che $L(\mathcal{M}_D)=L(\mathcal{M})$
+                \end{theorembox}
+                \begin{demonstration}
+                    \textbf{Prova}: Costruiamo $\mathcal{M}_D$ come la quintupla $\langle\wp(Q),\Sigma,\delta_D,\{q_0\},F_D\rangle$. L'idea centrale della costruzione è che ogni stato del nuovo DFA $\mathcal{M}_D$ corrisponde a un insieme di stati dell'NFA originale.
+                    \begin{itemize}
+                        \item $Q_D=\wp(Q_N)$: questo significa che ogni stato del DFA è un sottoinsieme degli stati dell'NFA. Se l'NFA ha $|Q_N|$ stati, il DFA risultante può avere fino a $2^{|Q_N|}$ stati, sebbene non tutti siano necessariamente raggiungibili.
+                        \item $\delta_D$: per ogni stato $q_D\in\wp(Q_N)$ (che è un insieme di stati dell'NFA) e per ogni simbolo $\sigma \in \Sigma$, la transizione $\delta_D(q_D, \sigma)$ porta a un nuovo stato del DFA che è l'unione di tutti gli stati raggiungibili nell'NFA da qualsiasi stato in $q_D$ leggendo $\sigma$. Formalmente: \begin{equation*}
+                            \delta_D(q_D, \sigma) = \bigcup_{q \in q_D} \delta_N(q, \sigma)
+                        \end{equation*}
+                        \item $F_D$: Uno stato $q_D \subseteq Q_N$ del DFA è uno stato finale se e solo se contiene almeno uno stato finale dell'NFA. Formalmente: \begin{equation*}
+                            F_D = {q_D \subseteq Q_N \mid q_D \cap F_N \neq \emptyset}
+                        \end{equation*}
+                    \end{itemize}
+                    \large\textbf{Dimostrazione per induzione}\normalsize\\
+                    \textbf{Base}
+                    \begin{itemize}
+                        \item Per la definizione della funzione di transizione estesa in un DFA, $\hat{\delta}_D({q_0}, \varepsilon) = {q_0}$
+                        \item Per la definizione della funzione di transizione estesa in un NFA, $\hat{\delta}_N(q_0, \varepsilon) = {q_0}$
+                    \end{itemize}
+                    Quindi, la condizione è soddisfatta per la stringa vuota: $\hat{\delta}_D({q_0}, \varepsilon) = \hat{\delta}_N(q_0, \varepsilon)$.\\
+                    \textbf{Passo (Stringa $u\sigma$)}
+                    \begin{itemize}
+                        \item Assumiamo, per ipotesi induttiva, che per una generica stringa $u$, valga $\hat{\delta}_D({q_0}, u) = \hat{\delta}_N(q_0, u)$, vogliamo dimostrare che la stessa uguaglianza vale per la stringa $u\sigma$
+                        \item Applichiamo la definizione di $\hat{\delta}_D$ a $u\sigma$: $\hat{\delta}_D({q_0}, u\sigma) = \delta_D(\hat{\delta}_D({q_0}, u), \sigma)$, possiamo sostituire $\hat{\delta}_D({q_0}, u)$ con $\hat{\delta}_N(q_0, u)$: $= \delta_D(\hat{\delta}_N(q_0, u), \sigma)$
+                        \item Ora applichiamo la definizione di $\delta_D$: è l'unione delle transizioni $\delta_N(q', \sigma)$ per tutti gli stati $q'$ nell'insieme $\hat{\delta}N(q_0, u)$:$= \bigcup{q' \in \hat{\delta}_N(q_0, u)} \delta_N(q', \sigma)$. Questa è precisamente la definizione di $\hat{\delta}_N(q_0, u\sigma)$
+                    \end{itemize}
+                    Quindi, $\hat{\delta}_D({q_0}, u\sigma) = \hat{\delta}_N(q_0, u\sigma)$.\\
+                    Avendo dimostrato per induzione che $\hat{\delta}_D({q_0}, u) = \hat{\delta}_N(q_0, u)$ per ogni stringa $u \in \Sigma^*$, possiamo concludere sull'accettazione del linguaggio:
+                    \begin{itemize}
+                        \item Una stringa $u$ è accettata dal DFA $\mathcal{M}_D$ se e solo se $\hat{\delta}_D({q_0}, u) \in F_D$
+                        \item Per definizione di $F_D$, ciò significa che $\hat{\delta}_D({q_0}, u)$ deve contenere almeno uno stato finale di $\mathcal{M}_N$, ovvero $\hat{\delta}_D({q_0}, u) \cap F_N \neq \emptyset$
+                        \item Poiché $\hat{\delta}_D({q_0}, u) = \hat{\delta}_N(q_0, u)$, questo è equivalente a $\hat{\delta}_N(q_0, u) \cap F_N \neq \emptyset$
+                        \item E quest'ultima è la condizione di accettazione di una stringa per un NFA $\mathcal{M}_N$
+                    \end{itemize}
+                    Pertanto, $u$ è accettata da $\mathcal{M}_D$ se e solo se è accettata da $\mathcal{M}_N$, il che significa che $L(\mathcal{M}_D) = L(\mathcal{M}_N)$.
+                \end{demonstration}
+                \begin{definitionbox}{$\varepsilon$-NFA o NFA con transizioni silenti}{}
+                    E' una quintupla $M = \langle Q, \Sigma, \delta, q_0, F \rangle$ dove la funzione di transizione, che ha la forma \begin{equation*}
+                        \delta : Q \times (\Sigma \cup {\varepsilon}) \to \wp(Q)
+                    \end{equation*}
+                    La peculiarità di questa definizione è l'inclusione di $\varepsilon$ nell'alfabeto di input della funzione di transizione, il che consente transizioni tra stati senza consumare alcun simbolo di input (transizioni silenti). Questo permette, in molti casi, di costruire automi più semplici e leggibili
+                \end{definitionbox}
+                Il comportamento di un $\varepsilon$-NFA è descritto da un sistema di transizione con le seguenti caratteristiche:
+                \begin{itemize}
+                    \item \textbf{Configurazioni}: Sono della forma $\langle q, u \rangle$, dove $q \in Q$ è lo stato corrente e $u \in \Sigma^*$ è la stringa ancora da leggere
+                    \item \textbf{Relazione di riduzione}: È definita in due modi: \begin{itemize}
+                        \item $\langle q, \sigma u \rangle \to \langle q', u \rangle$ se $q' \in \delta(q, \sigma)$ (transizione standard, consumando un simbolo)
+                        \item $\langle q, u \rangle \to \langle q', u \rangle$ se $q' \in \delta(q, \varepsilon)$ (transizione silente, senza consumare simboli)
+                    \end{itemize}
+                    La relazione di riduzione è non deterministica, anche per via della possibilità di scegliere tra leggere o non leggere un simbolo. È generalmente non terminante, ma le computazioni infinite sono dovute solo a cicli di transizioni $\varepsilon$ dallo stesso stato, che possono essere eliminati.
+                    \item \textbf{Configurazione di arresto}: Oltre alle configurazioni della forma $\langle q, \varepsilon \rangle$, includono anche quelle in cui l'automa si blocca perché non ci sono transizioni possibili (né con simboli di input, né silenti) da un dato stato con il simbolo corrente
+                    \item \textbf{Linguaggio accettato}: Le direttive di input/output sono le stesse degli NFA. Una stringa $u$ è accettata se esiste almeno una computazione che, partendo dalla configurazione iniziale $\langle q_0, u \rangle$, raggiunge una configurazione $\langle q, \varepsilon \rangle$ dove $q$ è uno stato finale. Un modo equivalente per definire il linguaggio accettato utilizza la funzione di transizione estesa $\hat{\delta} : Q \times \Sigma^* \to \wp(Q)$, che si basa sul concetto di $\varepsilon$-closure: \begin{itemize}
+                        \item \textbf{$\varepsilon$-closure(q)}: È l'insieme di tutti gli stati raggiungibili da $q$ utilizzando zero o più transizioni $\varepsilon$. Formalmente, include $q$ stesso, tutti gli stati raggiungibili da $q$ tramite $\delta(q, \varepsilon)$, e ricorsivamente tutti gli stati raggiungibili da questi ultimi tramite ulteriori transizioni $\varepsilon$
+                        \item \textbf{Funzione di transizione estesa $\hat{\delta}$}: \begin{itemize}
+                            \item $\hat{\delta}(q, \varepsilon) = \varepsilon\text{-closure}(q)$
+                            \item $\hat{\delta}(q, u\sigma) = \bigcup_{q' \in \hat{\delta}(q, u)} \varepsilon\text{-closure}(\delta(q', \sigma))$
+                        \end{itemize}
+                        Una stringa $u$ è accettata se e solo se l'insieme di stati raggiungibili dopo aver letto $u$ (cioè $\hat{\delta}(q_0, u)$) contiene almeno uno stato finale ($\hat{\delta}(q_0, u) \cap F \neq \emptyset$)
+                    \end{itemize}
+                \end{itemize}
 \end{document}
