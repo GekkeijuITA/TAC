@@ -356,5 +356,150 @@
                         \item $\varepsilon-closure(q_2)=\{q_2,q_1\}$
                     \end{itemize}
                 \end{example}
+        \section{Minimizzazione di DFA}
+            La minimizzazione di un DFA mira a trovare un automa equivalente, che accetti lo stesso linguaggio, ma con il numero minimo di stati.
+            \begin{itemize}
+                \item \textbf{Stati indistinguibili ($q\sim q'$)}: sono considerati indistinguibili (o equivalenti) se il linguaggio accettato a partire da $q$ è identico al linguaggio accettato a partire da $q'$. Ciò significa che per qualsiasi stringa $u\in\Sigma^*$, se $\hat{\delta}(q,u)\in F$ allora anche $\hat{\delta}(q',u)\text{ (deve) }\in F$ e viceversa. Questa relazione di indistinguibilità è una relazione di equivalenza.
+                \item \textbf{Classe di equivalenza ($\equivalenceclass{q}$)}: è l'insieme di tutti gli elementi di $Q$ che sono in relazione con $q$ ($\forall x\in Q, x\sim q$)
+                \item \textbf{Quoziente di $Q$ ($\quotientof{Q}$)}: è l'insieme i cui elementi sono le classi di equivalenza stesse,\\
+                $\quotientof{Q}=\{\equivalenceclass{q}\mid q\in Q\}$
+            \end{itemize}
+            \underline{Due stati indistinguibili possono intuitivamente essere trasformati in un unico stato}.\\
+            Quindi:
+            \begin{equation*}
+                \mathcal{M'}=\langle\quotientof{Q},\Sigma,\delta',\equivalenceclass{q_0},F'\rangle
+            \end{equation*}
+            \subsection{Algoritmo}
+                \begin{enumerate}
+                    \item Suddividiamo gli stati in due classi di equivalenza: quelli finali e quelli non finali
+                    \item A ogni passo consideriamo le classi di equivalenza ottenute al passo precedente \begin{enumerate}
+                        \item  Per ognuna di esse immaginiamo che tutti gli stati all'interno leggano un $\sigma$
+                        \item Se tutti gli stati finiscono in altri stati della stessa classe di equivalenza, allora questi stati sono ancora considerati simili per quel $\sigma$
+                        \item Altrimenti quei due stati non sono più indistinguibili. A questo punto la classe di equivalenza viene suddivisa in sottogruppi più piccoli, separando gli stati che si comportano in modo diverso
+                    \end{enumerate}
+                    \item Torniamo al punto (2.) e ripetiamo il processo, l'algoritmo si ferma solo quando, dopo aver controllato tutti i grupi con tutti i simboli, non c'è più nulla da dividere 
+                \end{enumerate}
+                \begin{lstlisting}
+                ind = {insieme di (q,q') indistinguibili};
+                old_ind = null;
+                while(ind != old_ind) {
+                    old_ind = ind;
+                    ind = null;
+                    for each (q,q') in old_ind {
+                        ok = true;
+                        for simb in alfabeto {
+                            if(!indistinguibili(delta(q,simb),delta(q',simb))){
+                                ok = false;
+                                break;
+                            }
+                        }
+                        if (ok) {
+                            ind = ind + (q,q');
+                        }
+                    }
+                }
+                \end{lstlisting}
+                \begin{example}
+                    Consideriamo il seguente DFA:
+                    \begin{center}
+                        \begin{tabular}{|c|c|c|}
+                            \hline
+                            & \textbf{a} & \textbf{b}\\
+                            \hline
+                            $\to q_0$ & $q_0$ & $q_1$ \\
+                            \hline
+                            $q_1$ & $q_1$ & $q_2$ \\
+                            \hline
+                            $q_2$ & $q_2$ & $q_3$ \\
+                            \hline
+                            $*q_3$ & $q_3$ & $q_3$ \\
+                            \hline
+                        \end{tabular}
+                    \end{center}
+                    \begin{enumerate}
+                        \item $\sim\,=\{\{q_3\},\{q_0,q_1,q_2\}\}$
+                        \item \textbf{Prima iterazione}: \begin{enumerate}
+                            \item Consideriamo $\{q_0,q_1,q_2\}$
+                            \item Leggiamo 'a': \begin{enumerate}
+                                \item $\delta(q_0,a)=q_0 \in \{q_0,q_1,q_2\}$
+                                \item $\delta(q_1,a)=q_1 \in \{q_0,q_1,q_2\}$
+                                \item $\delta(q_2,a)=q_2 \in \{q_0,q_1,q_2\}$
+                            \end{enumerate}
+                            \item Leggiamo 'b': \begin{enumerate}
+                                \item $\delta(q_0,b)=q_1 \in \{q_0,q_1,q_2\}$
+                                \item $\delta(q_1,b)=q_2 \in \{q_0,q_1,q_2\}$
+                                \item $\delta(q_2,b)=q_3 \notin \{q_0,q_1,q_2\}$
+                            \end{enumerate}
+                            \item Quindi $\sim\,=\{\{q_3\},\{q_0,q_1\},\{q_2\}\}$
+                        \end{enumerate}
+                        \item \textbf{Seconda iterazione}: \begin{enumerate}
+                            \item Consideriamo $\{q_0,q_1\}$
+                            \item Leggiamo 'a': \begin{enumerate}
+                                \item $\delta(q_0,a)=q_0 \in \{q_0,q_1\}$
+                                \item $\delta(q_1,a)=q_1 \in \{q_0,q_1\}$
+                            \end{enumerate}
+                            \item Leggiamo 'b': \begin{enumerate}
+                                \item $\delta(q_0,b)=q_1 \in \{q_0,q_1\}$
+                                \item $\delta(q_1,b)=q_2 \notin \{q_0,q_1\}$
+                            \end{enumerate}
+                            \item Quindi $\sim\,=\{\{q_3\},\{q_0\},\{q_1\},\{q_2\}\}$
+                        \end{enumerate}
+                    \end{enumerate}
+                    Quindi il DFA era già minimo.
+                \end{example}
+            \subsection{Espressioni regolari}
+                \begin{definitionbox}{}{}
+                    Un'espressione regolare è una stringa che descrive schematicamente un insieme di stringhe. I linguaggi denotati dalle RE sono definiti induttivamente: 
+                    \begin{itemize}
+                        \item $\emptyset$ è una RE che denota il linguaggio vuoto
+                        \item $\varepsilon$ è una RE che denota il linguaggio contenente solo la stringa vuota $\{\varepsilon\}$
+                        \item Per ogni simbolo $\sigma\in\Sigma$, $\sigma$ è una RE che denota il linguaggio $\{\sigma\}$
+                        \item Se $r_1$ è un'espressione regolare che denota il linguaggio $L_1$ e $r_2$ denota $L_2$, allora: \begin{itemize}
+                            \item $r_1+r_2$ (o $r_1\mid r_2$) denota l'unione dei linguaggi $L_1\cup L_2$
+                            \item $r_1r_2$ denota la concatenazione dei linguaggi $L_1\cdot L_2$
+                        \end{itemize}
+                        \item Se $r$ è un'espressione regolare che denota $L$, $r^*$ denota la chiusura di Kleene $L^*$
+                    \end{itemize}
+                \end{definitionbox}
+        \section{Proprietà dei linguaggi regolari}
+            \begin{itemize}
+                \item \textbf{Unione}: Se $L$ e $L'$ sono linguaggi regolari, anche la loro unione ($L \cup L'$) è un linguaggio regolare. Questa proprietà è "ovvia per definizione" in relazione alle espressioni regolari.
+                \item \textbf{Concatenazione}: Se $L$ e $L'$ sono linguaggi regolari, anche la loro concatenazione ($L \cdot L'$) è un linguaggio regolare. Anche questa è "ovvia per definizione".
+                \item \textbf{Chiusura di Kleene}: Se $L$ è un linguaggio regolare, anche la sua chiusura di Kleene ($L^*$) è un linguaggio regolare. Questa proprietà è anch'essa "ovvia per definizione".
+                \item \textbf{Complementazione}: Se $L$ è un linguaggio regolare su un alfabeto $\Sigma$, allora anche il suo complementare ($\overline{L} = \Sigma^* \setminus L$) è regolare. Questo si dimostra prendendo un DFA che riconosce $L$ e scambiando gli stati finali con quelli non finali.
+                \item \textbf{Intersezione}: Se $L$ e $L'$ sono linguaggi regolari, allora anche la loro intersezione ($L \cap L'$) è un linguaggio regolare. La chiusura rispetto all'intersezione si deduce facilmente dalla chiusura per complementazione, dato che $L \cap L' = \overline{\overline{L} \cup \overline{L'}}$.
+            \end{itemize}
+            \subsection{Pumping Lemma}
+                \begin{theorembox}{Pumping Lemma}{}
+                    Sia $L$ un linguaggio regolare. Allora esiste una costante $n\in\mathbb{N}$ (detta "lunghezza di pompaggio" o "numero di stati del DFA") tale che, per ogni $z\in L$ con $|z|\geq n$, possiamo decomporre $z$ come $uvw$ in modo che: \begin{itemize}
+                        \item $|uv|\geq n$ (la porzione "pompabile" $v$ deve trovarsi entro i primi $n$ simboli della stringa)
+                        \item $|v|>0$ (la porzione "pompabile" non deve essere vuota)
+                        \item per ogni $i\geq 0$ si ha che $uv^iw\in L$ ($v$ può essere ripetuta $i$ volte, inclusa l'eliminazione $i=0$, e la stringa rimarrà nel linguaggio)
+                    \end{itemize}
+                \end{theorembox}
+                \begin{demonstration}
+                    \begin{itemize}
+                        \item Assumiamo $L$ regolare $\Rightarrow$ per il Pumping Lemma, esiste una costante $n$.
+                        \item Si sceglie una stringa $z=\sigma_1\sigma_2\ldots\sigma_{|z|}\in L$ la cui lunghezza $|z|\geq n$.
+                        \item Dato che la stringa è accettata dall'automaa, abbiamo $q_0\xrightarrow{\sigma_1}q_1\xrightarrow{\sigma_2}\ldots\xrightarrow{\sigma_{|z|}}q_{|z|}=q_F\in F$
+                        \item Dato che il DFA ha solo $n$ stati in totale, necessariamente si ha che almeno uno stato $\bar{q}$ viene attraversato due volte nei primi $n$ passi, ossia $\bar{q}=q_i=q_j$ per qualche $0\leq i<j\leq n$
+                        \item \textbf{Decomposizione di z}: \begin{itemize}
+                            \item $u=\sigma_1\ldots\sigma_i$
+                            \item $v=\sigma_{i+1}\ldots\sigma_j$
+                            \item $w=\sigma_{j+1}\ldots\sigma_{|z|}$
+                        \end{itemize}
+                        si ha $q_0\xrightarrow{u}\bar{q}\xrightarrow{v}\bar{q}\xrightarrow{w}q_F$, quindi $q_0\xrightarrow{u}\bar{q}\xrightarrow{v^i}\bar{q}\xrightarrow{w}q_F$ perchè $\bar{q}\xrightarrow{v}\bar{q}$
+                    \end{itemize}
+                \end{demonstration}
 
+                Il pumping lemma viene tipicamente utilizzato per provare che un linguaggio $L$ \textbf{non} è regolare.\\
+                A tale scopo: \begin{itemize}
+                    \item Si sceglie un numero arbitrario $n$
+                    \item Si trova una stringa $z\in L$, con lunghezza $|z|\geq n$
+                    \item Si dimostra che, per ogni modo in cui si può dividere $z$ in tre parti $uvw$ (dove $|uv|\leq n$ e $|v|>0$), se si ripete la parte $v$ (o la si elimina), la stringa che si ottiene \textbf{non} appartiene più al linguaggio
+                \end{itemize}
+                Questo contraddice la definizione di linguaggio regolare, provando così che il linguaggio non lo è.
+                \begin{example}
+                    Possiamo dimostrare, utilizzando il pumping lemma, che il linguaggio $\{0^n1^n\}$ non è regolare. Infatti, preso $n$ arbitrario, consideriamo la stringa $0^n1^n$. Decomponendo tale stringa in tre parti $u, v, w$ tali che la lunghezza delle prime due sia $\leq n$ e la seconda sia non vuota, si ha chiaramente $u = 0^a$, $v = 0^b$ e $w = 0^c1^n$ con $a+b+c = n$, $b > 0$. Allora, per esempio per $i = 0$, si ha che $uv^0w = 0^a0^c1^n$ non appartiene al linguaggio in quanto $a+c < n$.
+                \end{example}
 \end{document}
