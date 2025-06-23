@@ -183,7 +183,19 @@
                 Analogamente ai DFA, un NFA può essere rappresentato in due modi principali:
                 \begin{itemize}
                     \item \textbf{Grafo di transizione}: rimane concettualmente la stessa dei DFA
-                    \item \textbf{Tabella di transizione}: ogni casella della tabella (corrispondente a una coppia stato/simbolo) può contenere un insieme di stati
+                    \item \textbf{Tabella di transizione}: ogni casella della tabella (corrispondente a una coppia stato/simbolo) può contenere un insieme di stati \begin{center}
+                        \begin{tabular}{|c|c|c|}
+                            \hline
+                             & 0 & 1\\
+                             \hline
+                             $\to q_0$ & $\{q_0,q_1\}$ & $q_0$\\
+                             \hline
+                             $q_1$ & $\emptyset$ & $q_2$\\
+                             \hline
+                             $*q_2$ & $q_2$ & $q_2$\\
+                            \hline
+                        \end{tabular}
+                    \end{center}
                 \end{itemize}
                 Il comportamento di un NFA è descritto da un sistema di transizione:
                 \begin{itemize}
@@ -205,22 +217,77 @@
                         \item $\hat{\delta}(q, \varepsilon) = {q}$
                         \item $\hat{\delta}(q, u\sigma) = \bigcup_{q' \in \hat{\delta}(q, u)} \delta(q', \sigma)$
                     \end{itemize}
-                    Con questa definizione, una stringa $u$ è accettata se e solo se esiste uno stato $q$ nell'insieme $\hat{\delta}(q_0, u)$ che sia uno stato finale ($q \in F$). In altre parole, $L(M) = {u \mid \hat{\delta}(q_0, u) \cap F \neq \emptyset }$
+                    Con questa definizione, una stringa $u$ è accettata se e solo se esiste uno stato $q$ nell'insieme $\hat{\delta}(q_0, u)$ che sia uno stato finale ($q \in F$). In altre parole, $L(\mathcal{M}) = {u \mid \hat{\delta}(q_0, u) \cap F \neq \emptyset }$
                 \end{itemize}
                 \begin{theorembox}{Rabin-Scott}{}
                     Sia $\mathcal{M}=\langle Q,\Sigma,\delta_N,q_0,F_N\rangle$ un NFA. Allora esiste un DFA $\mathcal{M}_D$ tale che $L(\mathcal{M}_D)=L(\mathcal{M})$
                 \end{theorembox}
-                \begin{demonstration}
-                    \textbf{Prova}: Costruiamo $\mathcal{M}_D$ come la quintupla $\langle\wp(Q),\Sigma,\delta_D,\{q_0\},F_D\rangle$. L'idea centrale della costruzione è che ogni stato del nuovo DFA $\mathcal{M}_D$ corrisponde a un insieme di stati dell'NFA originale.
+                \textbf{Prova}: Costruiamo $\mathcal{M}_D$ come la quintupla $\langle\wp(Q),\Sigma,\delta_D,\{q_0\},F_D\rangle$. L'idea centrale della costruzione è che ogni stato del nuovo DFA $\mathcal{M}_D$ corrisponde a un insieme di stati dell'NFA originale.
+                \begin{itemize}
+                    \item $Q_D=\wp(Q_N)$: questo significa che ogni stato del DFA è un sottoinsieme degli stati dell'NFA. Se l'NFA ha $|Q_N|$ stati, il DFA risultante può avere fino a $2^{|Q_N|}$ stati, sebbene non tutti siano necessariamente raggiungibili.
+                    \item $\delta_D$: per ogni stato $q_D\in\wp(Q_N)$ (che è un insieme di stati dell'NFA) e per ogni simbolo $\sigma \in \Sigma$, la transizione $\delta_D(q_D, \sigma)$ porta a un nuovo stato del DFA che è l'unione di tutti gli stati raggiungibili nell'NFA da qualsiasi stato in $q_D$ leggendo $\sigma$. Formalmente: \begin{equation*}
+                        \delta_D(q_D, \sigma) = \bigcup_{q \in q_D} \delta_N(q, \sigma)
+                    \end{equation*}
+                    \item $F_D$: Uno stato $q_D \subseteq Q_N$ del DFA è uno stato finale se e solo se contiene almeno uno stato finale dell'NFA. Formalmente: \begin{equation*}
+                        F_D = {q_D \subseteq Q_N \mid q_D \cap F_N \neq \emptyset}
+                    \end{equation*}
+                \end{itemize}
+                \begin{exercise}{}
                     \begin{itemize}
-                        \item $Q_D=\wp(Q_N)$: questo significa che ogni stato del DFA è un sottoinsieme degli stati dell'NFA. Se l'NFA ha $|Q_N|$ stati, il DFA risultante può avere fino a $2^{|Q_N|}$ stati, sebbene non tutti siano necessariamente raggiungibili.
-                        \item $\delta_D$: per ogni stato $q_D\in\wp(Q_N)$ (che è un insieme di stati dell'NFA) e per ogni simbolo $\sigma \in \Sigma$, la transizione $\delta_D(q_D, \sigma)$ porta a un nuovo stato del DFA che è l'unione di tutti gli stati raggiungibili nell'NFA da qualsiasi stato in $q_D$ leggendo $\sigma$. Formalmente: \begin{equation*}
-                            \delta_D(q_D, \sigma) = \bigcup_{q \in q_D} \delta_N(q, \sigma)
-                        \end{equation*}
-                        \item $F_D$: Uno stato $q_D \subseteq Q_N$ del DFA è uno stato finale se e solo se contiene almeno uno stato finale dell'NFA. Formalmente: \begin{equation*}
-                            F_D = {q_D \subseteq Q_N \mid q_D \cap F_N \neq \emptyset}
-                        \end{equation*}
+                        \item \textbf{NFA Originale $\left(\mathcal{M}_N\right)$}: $\mathcal{M}=\left(\{q_0,q_1,q_2\},\{0,1\},\delta_N,q_0,q_2\right)$ con \begin{center}
+                            $\delta_N=$ \begin{tabular}{|c|c|c|}
+                                \hline
+                                & 0 & 1 \\
+                                \hline
+                                $\to q_0$ & $q_0$ & $\{q_0,q_1\}$\\
+                                \hline
+                                $q_1$ & $\emptyset$ & $q_2$\\
+                                \hline
+                                $*q_2$ & $q_2$ & $q_2$\\
+                                \hline
+                            \end{tabular}
+                        \end{center}
+                        \item \textbf{DFA Derivante $(\mathcal{M}_D)$}: $\mathcal{M}_D=(Q_D,\{0,1\},\delta_D,q_0,F_D)$ \begin{itemize}
+                            \item $Q_D=\{\emptyset,\{q_0\},\{q_1\},\{q_2\},\{q_0,q_1\},\{q_0,q_2\},\{q_1,q_2\},\{q_0,q_1,q_2\}\}$
+                            \item $F_D=\{\{q_2\},\{q_0,q_2\},\{q_1,q_2\},\{q_0,q_1,q_2\}\}$ (tutti gli stati che contengono lo stato finale della NFA)
+                            \item $\delta_D$: \begin{enumerate}
+                                \item \textbf{Da $\{q_0\}$}: \begin{itemize}
+                                    \item $\delta_D(q_0,0)=\delta_N(q_0,0)=q_0$
+                                    \item $\delta_D(q_0,1)=\delta_N(q_0,1)=\{q_0,q_1\}$
+                                \end{itemize}
+                                \item \textbf{Da $\{q_0,q_1\}$}: \begin{itemize}
+                                    \item $\delta_D(\{q_0,q_1\},0)=\delta_N(q_0,0)\cup \delta_N(q_1,0)=\{q_0\}\cup\emptyset=q_0$
+                                    \item $\delta_D(\{q_0,q_1\},1)=\delta_N(q_0,1)\cup \delta_N(q_1,1)=\{q_0,q_1\}\cup\{q_2\}=\{q_0,q_1,q_2\}$ 
+                                \end{itemize}
+                                \item \textbf{Da $\{q_0,q_1,q_2\}$}: \begin{itemize}
+                                    \item $\delta_D(\{q_0,q_1,q_2\},0)=\delta_N(q_0,0)\cup \delta_N(q_1,0)\cup\delta_N(q_2,0)=\{q_0\}\cup\emptyset\cup\{q_2\}=\{q_0,q_2\}$
+                                    \item $\delta_D(\{q_0,q_1,q_2\},1)=\delta_N(q_0,1)\cup \delta_N(q_1,1)\cup\delta_N(q_2,1)=\{q_0,q_1\}\cup\{q_2\}\cup\{q_2\}=\{q_0,q_1,q_2\}$
+                                \end{itemize}
+                                \item \textbf{Da $\{q_0,q_2\}$}: \begin{itemize}
+                                    \item $\delta_D(\{q_0,q_2\},0)=\delta_N(q_0,0)\cup \delta_N(q_2,0)=\{q_0\}\cup\{q_2\}=\{q_0,q_2\}$
+                                    \item $\delta_D(\{q_0,q_2\},1)=\delta_N(q_0,1)\cup \delta_N(q_2,1)=\{q_0,q_1\}\cup\{q_2\}=\{q_0,q_1,q_2\}$
+                                \end{itemize}
+                            \end{enumerate}
+                            Quindi \begin{center}
+                                $\delta_D=$ \begin{tabular}{|c|c|c|}
+                                \hline
+                                & 0 & 1 \\
+                                \hline
+                                $\to q_0$ & $q_0$ & $\{q_0,q_1\}$\\
+                                \hline
+                                $\{q_0,q_1\}$ & $q_0$ & $\{q_0,q_1,q_2\}$\\
+                                \hline
+                                $*\{q_0,q_1,q_2\}$ & $\{q_0,q_2\}$ & $\{q_0,q_1,q_2\}$\\
+                                \hline
+                                $*\{q_0,q_2\}$ & $\{q_0,q_2\}$ & $\{q_0,q_1,q_2\}$\\
+                                \hline
+                            \end{tabular}
+                            \end{center}
+                        \end{itemize}
                     \end{itemize}
+                    \textit{Abbiamo costruito la tabella includendo unicamente gli stati raggiungibili a partire da $\{q_0\}$. Secondo la definizione di $\delta_D$, non è necessario calcolare le transizioni per stati come $\{q_1\}$, $\{q_1,q_2\}$ e $\{q_2\}$, dato che non vengono mai raggiunti.}
+                \end{exercise}
+                \begin{demonstration}
                     \large\textbf{Dimostrazione per induzione}\normalsize\\
                     \textbf{Base}
                     \begin{itemize}
@@ -232,7 +299,7 @@
                     \begin{itemize}
                         \item Assumiamo, per ipotesi induttiva, che per una generica stringa $u$, valga $\hat{\delta}_D({q_0}, u) = \hat{\delta}_N(q_0, u)$, vogliamo dimostrare che la stessa uguaglianza vale per la stringa $u\sigma$
                         \item Applichiamo la definizione di $\hat{\delta}_D$ a $u\sigma$: $\hat{\delta}_D({q_0}, u\sigma) = \delta_D(\hat{\delta}_D({q_0}, u), \sigma)$, possiamo sostituire $\hat{\delta}_D({q_0}, u)$ con $\hat{\delta}_N(q_0, u)$: $= \delta_D(\hat{\delta}_N(q_0, u), \sigma)$
-                        \item Ora applichiamo la definizione di $\delta_D$: è l'unione delle transizioni $\delta_N(q', \sigma)$ per tutti gli stati $q'$ nell'insieme $\hat{\delta}N(q_0, u)$:$= \bigcup{q' \in \hat{\delta}_N(q_0, u)} \delta_N(q', \sigma)$. Questa è precisamente la definizione di $\hat{\delta}_N(q_0, u\sigma)$
+                        \item Ora applichiamo la definizione di $\delta_D$: è l'unione delle transizioni $\delta_N(q', \sigma)$ per tutti gli stati $q'$ nell'insieme $\hat{\delta}_N(q_0, u)$:$= \bigcup_{q' \in \hat{\delta}_N(q_0, u)} \delta_N(q', \sigma)$. Questa è precisamente la definizione di $\hat{\delta}_N(q_0, u\sigma)$
                     \end{itemize}
                     Quindi, $\hat{\delta}_D({q_0}, u\sigma) = \hat{\delta}_N(q_0, u\sigma)$.\\
                     Avendo dimostrato per induzione che $\hat{\delta}_D({q_0}, u) = \hat{\delta}_N(q_0, u)$ per ogni stringa $u \in \Sigma^*$, possiamo concludere sull'accettazione del linguaggio:
@@ -246,7 +313,7 @@
                 \end{demonstration}
                 \begin{definitionbox}{$\varepsilon$-NFA o NFA con transizioni silenti}{}
                     E' una quintupla $M = \langle Q, \Sigma, \delta, q_0, F \rangle$ dove la funzione di transizione, che ha la forma \begin{equation*}
-                        \delta : Q \times (\Sigma \cup {\varepsilon}) \to \wp(Q)
+                        \delta : Q \times (\Sigma \cup \{\varepsilon\}) \to \wp(Q)
                     \end{equation*}
                     La peculiarità di questa definizione è l'inclusione di $\varepsilon$ nell'alfabeto di input della funzione di transizione, il che consente transizioni tra stati senza consumare alcun simbolo di input (transizioni silenti). Questo permette, in molti casi, di costruire automi più semplici e leggibili
                 \end{definitionbox}
@@ -260,7 +327,7 @@
                     La relazione di riduzione è non deterministica, anche per via della possibilità di scegliere tra leggere o non leggere un simbolo. È generalmente non terminante, ma le computazioni infinite sono dovute solo a cicli di transizioni $\varepsilon$ dallo stesso stato, che possono essere eliminati.
                     \item \textbf{Configurazione di arresto}: Oltre alle configurazioni della forma $\langle q, \varepsilon \rangle$, includono anche quelle in cui l'automa si blocca perché non ci sono transizioni possibili (né con simboli di input, né silenti) da un dato stato con il simbolo corrente
                     \item \textbf{Linguaggio accettato}: Le direttive di input/output sono le stesse degli NFA. Una stringa $u$ è accettata se esiste almeno una computazione che, partendo dalla configurazione iniziale $\langle q_0, u \rangle$, raggiunge una configurazione $\langle q, \varepsilon \rangle$ dove $q$ è uno stato finale. Un modo equivalente per definire il linguaggio accettato utilizza la funzione di transizione estesa $\hat{\delta} : Q \times \Sigma^* \to \wp(Q)$, che si basa sul concetto di $\varepsilon$-closure: \begin{itemize}
-                        \item \textbf{$\varepsilon$-closure(q)}: È l'insieme di tutti gli stati raggiungibili da $q$ utilizzando zero o più transizioni $\varepsilon$. Formalmente, include $q$ stesso, tutti gli stati raggiungibili da $q$ tramite $\delta(q, \varepsilon)$, e ricorsivamente tutti gli stati raggiungibili da questi ultimi tramite ulteriori transizioni $\varepsilon$
+                        \item \textbf{$\varepsilon-closure(q)$}: È l'insieme di tutti gli stati raggiungibili da $q$ utilizzando zero o più transizioni $\varepsilon$. Formalmente, include $q$ stesso, tutti gli stati raggiungibili da $q$ tramite $\delta(q, \varepsilon)$, e ricorsivamente tutti gli stati raggiungibili da questi ultimi tramite ulteriori transizioni $\varepsilon$
                         \item \textbf{Funzione di transizione estesa $\hat{\delta}$}: \begin{itemize}
                             \item $\hat{\delta}(q, \varepsilon) = \varepsilon\text{-closure}(q)$
                             \item $\hat{\delta}(q, u\sigma) = \bigcup_{q' \in \hat{\delta}(q, u)} \varepsilon\text{-closure}(\delta(q', \sigma))$
@@ -268,4 +335,26 @@
                         Una stringa $u$ è accettata se e solo se l'insieme di stati raggiungibili dopo aver letto $u$ (cioè $\hat{\delta}(q_0, u)$) contiene almeno uno stato finale ($\hat{\delta}(q_0, u) \cap F \neq \emptyset$)
                     \end{itemize}
                 \end{itemize}
+                \begin{example}
+                    $\mathcal{M}_N=(\{q_0,q_1,q_2\},\{a,b\},\delta_N,q_0,F_N)$
+                    \begin{center}
+                        $\delta_N=$ \begin{tabular}{|c|c|c|c|}
+                            \hline
+                             & a & b & $\varepsilon$\\
+                            \hline
+                            $\to q_0$ & \ldots & \ldots & $q_1$\\
+                            \hline
+                            $q_1$ & \ldots & \ldots & $q_2$\\
+                            \hline
+                            $*q_2$ & \ldots & \ldots & $q_1$\\
+                            \hline
+                        \end{tabular}
+                    \end{center}
+                    \textbf{Calcolo le $\varepsilon-closure$}: \begin{itemize}
+                        \item $\varepsilon-closure(q_0)=\{q_0,q_1,q_2\}$
+                        \item $\varepsilon-closure(q_1)=\{q_1,q_2\}$
+                        \item $\varepsilon-closure(q_2)=\{q_2,q_1\}$
+                    \end{itemize}
+                \end{example}
+
 \end{document}

@@ -70,4 +70,21 @@
     }{
         \end{tcolorbox}
     }
+
+    \tcbset{
+        example/.style={
+            colback=gray!5!white, 
+            colframe=gray!75!black,
+            boxsep=5pt,
+            arc=5pt,
+            boxrule=1pt,
+            title={\textbf{Esempio}}
+        }
+    }
+    
+    \newenvironment{example}[1][]{
+        \begin{tcolorbox}[example, ##1]
+    }{
+        \end{tcolorbox}
+    }
 }
