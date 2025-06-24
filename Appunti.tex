@@ -447,6 +447,67 @@
                     \end{enumerate}
                     Quindi il DFA era già minimo.
                 \end{example}
+                \begin{example}
+                    \begin{center}
+                        \includegraphics[width=0.8\textwidth]{Images/minimizzazionefebbraio2024.png}
+                    \end{center}
+                    \footnotesize
+                    \begin{enumerate}
+                        \item Costruiamo la tabella di transizione (non necessaria ma aiuta): \begin{center}
+                            \begin{tabular}{|c|c|c|}
+                                \hline
+                                & \textbf{a} & \textbf{b}\\
+                                \hline
+                                $\to$1 & 2 & 7\\
+                                \hline
+                                2 & 6 & 3 \\
+                                \hline
+                                7 & 2 & 9\\
+                                \hline
+                                6 & 10 & 3\\
+                                \hline
+                                3 & 8 & 9\\
+                                \hline
+                                9 & 4 & 10\\
+                                \hline
+                                $*$10 & 10 & 10\\
+                                \hline
+                                8 & 5 & 7\\
+                                \hline
+                                4 & 5 & 3\\
+                                \hline
+                                5 & 10 & 7\\
+                                \hline
+                            \end{tabular}
+                        \end{center}
+                        \item $\sim\,=\{\{10\},\{1,2,3,4,5,6,7,8,9\}\}$
+                        \item \textbf{Prima iterazione}: \begin{enumerate}
+                            \item Consideriamo $\{1,2,3,4,5,6,7,8,9\}$
+                            \item Leggiamo 'a': \begin{enumerate}
+                                \item $\delta(1,a)=2$
+                                \item $\delta(2,a)=6$
+                                \item $\delta(3,a)=8$
+                                \item $\delta(4,a)=5$
+                                \item $\delta(5,a)=10\notin\{1,2,3,4,5,6,7,8,9\}$
+                                \item $\delta(6,a)=10\notin\{1,2,3,4,5,6,7,8,9\}$
+                                \item $\delta(7,a)=2$
+                                \item $\delta(8,a)=5$
+                                \item $\delta(9,a)=4$
+                            \end{enumerate}
+                            \item Leggiamo 'b': \begin{enumerate}
+                                \item $\delta(1,b)=7$
+                                \item $\delta(2,b)=3$
+                                \item $\delta(3,b)=9$
+                                \item $\delta(4,b)=3$
+                                \item $\delta(7,b)=9$
+                                \item $\delta(8,b)=7$
+                                \item $\delta(9,b)=10\notin\{1,2,3,4,5,6,7,8,9\}$
+                            \end{enumerate}
+                            \item Quindi $\sim\,=\{\{10\},\{5,6\},\{9\},\{1,2,3,4,7,8\}\}$
+                        \end{enumerate}
+                        \item Nella seconda (e ultima in questo caso) iterazione avremo che $\sim\,=\{\{10\},\{5,6\},\{9\},\{1\},\{2,4,8\},\{3,7\}\}$
+                    \end{enumerate}
+                \end{example}
             \subsection{Espressioni regolari}
                 \begin{definitionbox}{}{}
                     Un'espressione regolare è una stringa che descrive schematicamente un insieme di stringhe. I linguaggi denotati dalle RE sono definiti induttivamente: 
@@ -502,4 +563,96 @@
                 \begin{example}
                     Possiamo dimostrare, utilizzando il pumping lemma, che il linguaggio $\{0^n1^n\}$ non è regolare. Infatti, preso $n$ arbitrario, consideriamo la stringa $0^n1^n$. Decomponendo tale stringa in tre parti $u, v, w$ tali che la lunghezza delle prime due sia $\leq n$ e la seconda sia non vuota, si ha chiaramente $u = 0^a$, $v = 0^b$ e $w = 0^c1^n$ con $a+b+c = n$, $b > 0$. Allora, per esempio per $i = 0$, si ha che $uv^0w = 0^a0^c1^n$ non appartiene al linguaggio in quanto $a+c < n$.
                 \end{example}
+        \section{Automi a pila}
+            \begin{definitionbox}{Automa a pila non deterministico (PDA)}{}
+                E' una tupla \begin{equation*}
+                    \mathcal{M}=\langle Q,\Sigma,\Gamma,\delta,q_0,Z,F\rangle
+                \end{equation*}
+                \begin{itemize}
+                    \item $Q,\Sigma,q_0,F$ come per gli automi a stati finiti
+                    \item $\Gamma$: alfabeto della pila
+                    \item $Z$: simbolo inziale della pila
+                    \item $\delta:Q\times(\Sigma\cup\{\varepsilon\})\times\Gamma\to\wp_F(Q\times\Gamma^*)$, dove $\wp_F(X)$ denota l'insieme dei sottoinsiemi \textit{finiti} di $X$
+                \end{itemize}
+            \end{definitionbox}
+            In termini informali, quando un automa a pila si trova nello stato $q$, legge un simbolo $\sigma$ (o esegue una transizione silente) e rimuove il simbolo in cima $Z$ dalla pila, può passare a un nuovo stato $q'$ e inserire una sequenza $\alpha$ (anche vuota) di nuovi simboli in cima alla pila.\\
+            L'automa è \textbf{non deterministico}, il che significa che per la stessa combinazione di stato, simbolo di input corrente e simbolo in cima alla pila, possono esserci diverse transizioni possibili.
+            Il comportamento di un PDA è descritto da un sistema di transizione con le seguenti caratteristiche:
+            \begin{itemize}
+                \item \textbf{Configurazioni}: sono nella forma $\langle q,u,\alpha\rangle$ dove $q\in Q$ è lo stato corrente, $u\in\Sigma^*$ è la stringa ancora da leggere e $\alpha\in\Gamma^*$ è il contenuto corrente della pila
+                \item \textbf{Relazione di riduzione}: Descrive come la macchina si muove da una configurazione all'altra: \begin{itemize}
+                    \item $\langle q, \sigma u, X \alpha \rangle \rightarrow \langle q', u, \gamma \alpha \rangle$ se $\langle q', \gamma \rangle \in \delta \langle q, \sigma, X \rangle$ (lettura di un simbolo di input $\sigma$)
+                    \item $\langle q, u, X \alpha \rangle \rightarrow \langle q', u, \gamma \alpha \rangle$ se $\langle q', \gamma \rangle \in \delta \langle q, \varepsilon, X \rangle$ (transizione silente $\varepsilon$)
+                \end{itemize}
+                La relazione di riduzione è non deterministica. Ciò significa che per una data configurazione, potrebbero esserci più transizioni possibili, incluse le transizioni silenti. Le computazioni possono essere non terminanti se ci sono cicli di transizioni $\varepsilon$ che non modificano l'input o la pila in modo significativo per il consumo della stringa
+                \item \textbf{Configurazioni di arresto}: Si verificano quando non ci sono ulteriori mosse possibili
+                \item \textbf{Direttive di Input/Output}: \begin{itemize}
+                    \item \textbf{Input}: $f_{IN}(u)=\langle q_0, u, Z \rangle$
+                    \item \textbf{Output}: \begin{itemize}
+                        \item Riconoscimento per pila vuota (Empty Stack Acceptance): \begin{equation*}
+                            f_{OUT}(\langle q, u, \alpha \rangle)= \begin{cases} \text{True} & \text{se } u = \varepsilon \text{ e } \alpha = \varepsilon \\ \text{False} & \text{altrimenti} \end{cases}
+                        \end{equation*}
+                        \item Riconoscimento per stati finali (Final State Acceptance): \begin{equation*}
+                            f_{OUT}(\langle q, u, \alpha \rangle) = \begin{cases} \text{True} & \text{se } u = \varepsilon \text{ e } q \in F \\ \text{False} & \text{altrimenti} \end{cases}
+                        \end{equation*}
+                    \end{itemize}
+                \end{itemize}
+                \item \textbf{Linguaggio accettato}: \begin{itemize}
+                    \item Per pila vuota: $L(\mathcal{M})=\{u\in\Sigma^*\mid\langle q_0,u,Z\rangle\to^*\langle\_,\varepsilon,\varepsilon\rangle\}$
+                    \item Per stati finali: $L(\mathcal{M})=\{u\in\Sigma^*\mid\langle q_0,u,Z\rangle\to^*\langle q,\varepsilon,\_\rangle,q\in F\}$
+                \end{itemize}
+                Usiamo la wildcar \_ per sottolineare il fatto che lo stato non è rilevante.\\
+                \textit{Le due definizioni sono equivalenti: se il linguaggio $L$ è riconosciuto da un qualche PDA secondo la prima definizione, allora esiste anche un PDA che lo riconosce secondo l'altra e viceversa}.
+            \end{itemize}
+            \begin{definitionbox}{Automa a pila deterministico (DPDA)}{}
+                 E' una tupla $\mathcal{M} = \langle Q, \Sigma, \Gamma, \delta, q_0, Z, F \rangle$ dove: \begin{itemize}
+                    \item $Q$, $\Sigma$, $q_0$ e $F$ sono come per gli automi a stati finiti
+                    \item $\Gamma$ è l'alfabeto della pila
+                    \item $Z$ è il simbolo iniziale nella pila
+                    \item $\delta : Q \times (\Sigma \cup {\varepsilon}) \times \Gamma \to \mathcal{P}_F(Q \times \Gamma^*)$ soddisfa la seguente condizione di determinismo:
+                    \\Per ogni $\langle q, \sigma, X \rangle \in Q \times \Sigma \times \Gamma$: $$|\delta\langle q, \sigma, X \rangle| + |\delta\langle q, \varepsilon, X \rangle| \le 1$$
+                 \end{itemize}
+                 Questa condizione garantisce che per ogni stato corrente $q$, simbolo di input corrente $\sigma$ (o transizione silente $\varepsilon$), e simbolo in cima alla pila $X$, esista al più una transizione possibile. Non è possibile, ad esempio, leggere un simbolo di input e contemporaneamente avere una transizione silente dallo stesso stato con lo stesso simbolo in cima alla pila.
+            \end{definitionbox}
+        \section{Linguaggi Context-Free}
+        \subsection{Grammatiche Context-Free}
+            \begin{definitionbox}{Grammatica CF}{}
+                Una CFG è definita da una quadrupla $\langle T, N, P, S \rangle$:
+                \begin{itemize}
+                    \item $T$ è l'alfabeto dei terminali (i simboli che compongono le stringhe del linguaggio)
+                    \item $N$ è l'alfabeto dei non terminali (simboli intermedi usati nelle derivazioni), con $T \cap N = \emptyset$
+                    \item $P$ è un insieme finito di produzioni (o regole), della forma $A ::= \alpha$, dove $A \in N$ e $\alpha \in (T \cup N)^*$
+                    \item $S \in N$ è il simbolo iniziale (o assioma), da cui partono le derivazioni
+                \end{itemize}
+            \end{definitionbox}
+            \begin{example}
+                \begin{itemize}
+                    \item $T=\{0,1,\ldots,9\}$
+                    \item $N=\{Exp,Num\}$
+                    \item $P=\{Exp:=Num, Exp:=(Exp+Exp), Num:=T\}$
+                    \item $S=Exp$
+                \end{itemize}
+            \end{example}
+            \begin{definitionbox}{Derivazione in un passo}{}
+                Questa nozione è fondamentale per comprendere come una grammatica context-free (CFG) genera le stringhe di un linguaggio.\\
+                Si considerano una grammatica $G = \langle T, N, P, S \rangle$. Si prendono due stringhe, $\alpha$ e $\beta$, che possono contenere sia simboli terminali che non terminali (ovvero $\alpha, \beta \in (T \cup N)^*$).\\
+                Si dice che $\beta$ è derivabile da $\alpha$ in un passo se valgono le seguenti condizioni: \begin{itemize}
+                    \item La stringa $\alpha$ ha la forma $\alpha_1 A \alpha_2$. Questo significa che $\alpha$ contiene un non terminale $A$, circondato da due (eventualmente vuote) sottostringhe $\alpha_1$ e $\alpha_2$, che possono essere composte da terminali e non terminali ($\alpha_1, \alpha_2 \in (T \cup N)^*$)
+                    \item La stringa $\beta$ ha la forma $\alpha_1 \gamma \alpha_2$
+                    \item Esiste una produzione (regola) $A ::= \gamma$ nell'insieme $P$ delle produzioni della grammatica. Qui $A$ è il non terminale che viene espanso e $\gamma$ è la stringa (di terminali e/o non terminali) con cui $A$ viene sostituito
+                \end{itemize}
+                 La derivazione in un passo è indicata con $\alpha \to \beta$. Questa relazione è una relazione su $(T \cup N)^*$.
+            \end{definitionbox}
+            \textbf{Chiusura Riflessiva e transitiva ($\rightarrow^*$)}: \begin{itemize}
+                \item La chiusura riflessiva e transitiva di $\rightarrow$ è indicata con $\rightarrow^*$
+                \item Si dice che $\beta$ è derivabile da $\alpha$ (in uno o più passi, o anche zero passi se $\alpha = \beta$) se $\alpha \rightarrow^* \beta$
+                \item Questa significa che si può ottenere $\beta$ partendo da $\alpha$ attraverso una sequenza di zero o più applicazioni delle regole di derivazione in un passo
+            \end{itemize}
+            \begin{definitionbox}{Linguaggio generato da una grammatica}{}
+                Data una grammatica Context-Free (CF) $G = \langle T, N, P, S \rangle$, il linguaggio generato da $G$, denotato $L(G)$, è definito come l'insieme di tutte le stringhe $u$ che appartengono all'alfabeto dei terminali $T^*$ e che possono essere derivate dal simbolo iniziale $S$: \begin{equation*}
+                    L(G)=\{u\in T^*\mid S\to^* u\}
+                \end{equation*}
+            \end{definitionbox}
+            Un linguaggio $L$ è definito Context-Free (CF) se esiste una grammatica CF $G$ che lo genera, ovvero tale che $L(G) = L$.\\
+            Talvolta, l'interesse può estendersi non solo al linguaggio generato dall'assioma ($S$), ma a una famiglia di linguaggi generati a partire da ciascun non terminale della grammatica (ad esempio, $L_A(G) = {u \in T^* \mid A \rightarrow^* u}$). In tal caso, la scelta di un assioma specifico non è l'unico aspetto significativo.
 \end{document}
