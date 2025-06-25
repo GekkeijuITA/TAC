@@ -655,4 +655,81 @@
             \end{definitionbox}
             Un linguaggio $L$ è definito Context-Free (CF) se esiste una grammatica CF $G$ che lo genera, ovvero tale che $L(G) = L$.\\
             Talvolta, l'interesse può estendersi non solo al linguaggio generato dall'assioma ($S$), ma a una famiglia di linguaggi generati a partire da ciascun non terminale della grammatica (ad esempio, $L_A(G) = {u \in T^* \mid A \rightarrow^* u}$). In tal caso, la scelta di un assioma specifico non è l'unico aspetto significativo.
+        \subsection{Proprietà}
+            \begin{definitionbox}{Pumping Lemma}{}
+                Se $L$ è un linguaggio CF, esiste una costante $n\in\mathbb{N}$ (lunghezza di pompaggio) tale che, per ogni $z\in L$ con $|z|\geq n$ può essere decomposta in $uvwxy$ in modo che:
+                \begin{itemize}
+                    \item $|vwx|\geq n$
+                    \item $|vx|>0$
+                    \item $\forall i\geq 0$ si ha che la stringa $uv^iwx^iy\in L$
+                \end{itemize} 
+            \end{definitionbox}
+            L'idea fondamentale di questo lemma è che, se un linguaggio è CF, allora ogni sua stringa che sia "sufficientemente lunga" può essere divisa in cinque parti. Due di queste parti possono essere ripetute (o eliminate) un numero qualsiasi di volte, e la stringa risultante apparterrà ancora al linguaggio.
+            \begin{demonstration}
+                \textbf{Prova}: Qualsiasi linguaggio CF (che non includa la stringa vuota $\varepsilon$, per semplicità) può essere generato da una grammatica CF che sia in Forma Normale di Chomsky (CNF). Una grammatica in CNF ha solo due tipi di produzioni (regole di riscrittura): \begin{itemize}
+                    \item Un non-terminale che produce due altri non-terminali (es. $A ::= BC$)
+                    \item Un non-terminale che produce un singolo simbolo terminale (es. $A ::= \sigma$)
+                \end{itemize}
+                Proviamo che, per una grammatica in CNF, se un albero di derivazione ha altezza m, allora la stringa finale che genera (la "frontiera" dell'albero) ha una lunghezza massima di $2^{(m-1)}$.\\
+                \textbf{Base}: Un albero di altezza 1 significa che il simbolo di partenza ha prodotto direttamente un terminale (es. $S ::= \sigma$). La stringa ha lunghezza 1. E $2^{(1-1)} = 2^0 = 1$. Quindi, il caso base funziona.\\
+                \textbf{Passo}: Un albero di altezza $m+1$ significa che il simbolo di partenza ha prodotto due altri non-terminali di altezza $m$ (es. $A::=BC$) le cui stringhe saranno di lunghezza al più $2^{(m-1)}$. Quindi: 
+                $$|A|=2^{(m-1)} + 2^{(m-1)}=2^m$$
+                Prendiamo $m$ come il numero di non-terminali della grammatica CNF che genera il linguaggio $L$ e stabiliamo $n=2^m$. Data una stringa $z\in L\mid|z|\geq n$, l'altezza del suo albero di derivazione deve essere \textbf{almeno} $m+1$. Visto che l'altezza dell'albero è maggiore del numero di non-terminali, sappiamo sicuramente che un non-terminale compaia due volte in un cammino dalla radice alle foglie (\textbf{Principio dei Cassetti}).
+                \begin{itemize}
+                    \item Indichiamo con $A^{(1)}$ e $A^{(2)}$ la prima e seconda occorrenza del non-terminale ripetuto
+                    \item Supponiamo di avere $z=uvwxy$ dove: \begin{itemize}
+                        \item $A^{(1)}$ genera la sottostringa $vwx$
+                        \item $A^{(2)}$, contenuta in $A^{(1)}$, genera solo $w$
+                        \item Le condizioni del lemma specificano: \begin{itemize}
+                            \item $|vwx| \leq n$ perché abbiamo scelto la ripetizione più vicina alle foglie (cioè quella con altezza minore).
+                            \item $|vx| > 0$ perché in una grammatica CNF non è possibile che entrambi $v$ e $x$ siano vuoti.
+                        \end{itemize}
+                    \end{itemize}
+                \end{itemize}
+                  Poiché $A$ può generare sia $vwx$ che $w$, è possibile ripetere o eliminare $v$ e $x$. Questo significa che le stringhe $uv^iwx^iy$ (per $i \geq 0$) apparterranno tutte al linguaggio.
+            \end{demonstration}
+            Come nel caso dei regolari, il pumping lemma viene utilizzato per provare che un linguaggio $L$ non è CF.\\
+            Per farlo, bisogna scegliere un numero $n$ qualunque, e poi trovare una stringa $z$ che: \begin{itemize}
+                \item Appartiene al linguaggio $L$
+                \item Ha lunghezza almeno $n$, cioè $|z|\geq n$
+            \end{itemize}
+            A questo punto, mostriamo che qualunque modo si scelga di dividere $z$ nella forma $$z=uvwxy$$
+            rispettando le due condizioni: 
+            \begin{itemize}
+                \item $|vwx|\leq n$
+                \item $|vx|>0$
+            \end{itemize}
+            allora esiste almeno un valore di $i$ per cui la stringa "pompata"
+            $$uv^iwx^iy$$
+            non appartiene al linguaggio $L$.
+            \begin{example}
+                \textit{Provare che $L=\{a^nb^nc^n\}$ non è CF.}
+                \begin{enumerate}
+                    \item Per assurdo consideriamo $L$ CF
+                    \item Scegliamo la stringa "più lunga": $z=a^nb^nc^n$, la lunghezza sarà $|z|=3n\geq n$
+                    \item Sappiamo che $z$ può essere decomposta come $uvwxy$
+                    \item Applichiamo il lemma: \begin{enumerate}
+                        \item $|vwx|\leq n$
+                        \item $|vx|>0$
+                        \item $\forall i\geq 0, uv^iwx^iy$
+                        \item Per certo possiamo dire che $vwx$ non può includere $a$ e $c$ perchè dovrebbe includere tutto $b^n$ e quindi la lunghezza sarebbe in ogni caso $> n$
+                        \item Impostiamo $i=0$ (solitamente si usa $i=0$ o $i=2$): $uv^0wx^0y=uwy$ con $|uwy|=|u|+|w|+|y|$
+                        \item $|z|=|u|+|v|+|w|+|x|+|y|\Rightarrow |uwy|=|z|-(|v|+|x|)$
+                        \item Poichè $|vx|>0$, ne consegue che $|uwy| < |z|$
+                    \end{enumerate}
+                    \item $L$ non è CF
+                \end{enumerate}
+            \end{example}
+            \subsubsection{Proprietà di Chiusura}
+                I linguaggi CF risultano chiusi rispetto a:
+                \begin{itemize}
+                    \item \textbf{Unione}
+                    \item \textbf{Concatenazione}
+                    \item \textbf{Chiusura di Kleene}
+                \end{itemize}
+                I linguaggi CF non risultano chiusi rispetto a:
+                \begin{itemize}
+                    \item \textbf{Intersezione}
+                    \item \textbf{Complementazione}
+                \end{itemize}
 \end{document}

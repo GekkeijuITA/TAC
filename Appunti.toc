@@ -13,3 +13,5 @@
 \contentsline {section}{\numberline {2.4}Automi a pila}{15}{section.2.4}%
 \contentsline {section}{\numberline {2.5}Linguaggi Context-Free}{17}{section.2.5}%
 \contentsline {subsection}{\numberline {2.5.1}Grammatiche Context-Free}{17}{subsection.2.5.1}%
+\contentsline {subsection}{\numberline {2.5.2}Proprietà}{18}{subsection.2.5.2}%
+\contentsline {subsubsection}{Proprietà di Chiusura}{20}{subsubsection*.2}%
