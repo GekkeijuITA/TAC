@@ -5,7 +5,7 @@
 \contentsline {chapter}{\numberline {2}Automi a stati finiti}{4}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Linguaggi regolari}{4}{section.2.1}%
 \contentsline {subsection}{\numberline {2.1.1}Automi a stati finiti}{4}{subsection.2.1.1}%
-\contentsline {section}{\numberline {2.2}Minimizzazione di DFA}{10}{section.2.2}%
+\contentsline {section}{\numberline {2.2}Minimizzazione di DFA}{11}{section.2.2}%
 \contentsline {subsection}{\numberline {2.2.1}Algoritmo}{11}{subsection.2.2.1}%
 \contentsline {subsection}{\numberline {2.2.2}Espressioni regolari}{14}{subsection.2.2.2}%
 \contentsline {section}{\numberline {2.3}Proprietà dei linguaggi regolari}{14}{section.2.3}%
@@ -15,3 +15,8 @@
 \contentsline {subsection}{\numberline {2.5.1}Grammatiche Context-Free}{17}{subsection.2.5.1}%
 \contentsline {subsection}{\numberline {2.5.2}Proprietà}{18}{subsection.2.5.2}%
 \contentsline {subsubsection}{Proprietà di Chiusura}{20}{subsubsection*.2}%
+\contentsline {chapter}{\numberline {3}Teoria della calcolabilità}{21}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Macchine di Turing}{21}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Funzioni T-calcolabili}{22}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Nozione di algoritmo e funzioni ricorsive primitive}{23}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Funzioni Ricorsive Primitive $\mathcal {PR}$}{23}{subsection.3.3.1}%

@@ -356,6 +356,19 @@
                         \item $\varepsilon-closure(q_2)=\{q_2,q_1\}$
                     \end{itemize}
                 \end{example}
+                \begin{algorithm}
+                    Per trovare un NFA senza transizioni $\varepsilon$ equivalente:
+                    \begin{enumerate}
+                        \item Tabelliamo $\delta$ (le funzioni di transizione) dell'automa originale
+                        \item Scriviamo il nuovo automa nella forma $\mathcal{M'}=\langle Q',\Sigma,\delta',q_0,F'\rangle$ dove: \begin{itemize}
+                            \item $Q'=Q$ (solitamente)
+                            \item $\Sigma$ è l'alfabeto
+                            \item $\delta'$ sarà la nuova tabella le cui righe si troveranno facendo $\delta'(q,\sigma)=\bigcup_{s\in\delta(q,\sigma)}\varepsilon-closure(s)$
+                            \item $q_0$ stato iniziale (solitamente è lo stesso)
+                            \item $F'$ è l'insieme di tutti gli stati che hanno nella propria $\varepsilon$-closure uno stato finale dell'automa originale
+                        \end{itemize}
+                    \end{enumerate}
+                \end{algorithm}
         \section{Minimizzazione di DFA}
             La minimizzazione di un DFA mira a trovare un automa equivalente, che accetti lo stesso linguaggio, ma con il numero minimo di stati.
             \begin{itemize}
@@ -732,4 +745,133 @@
                     \item \textbf{Intersezione}
                     \item \textbf{Complementazione}
                 \end{itemize}
+    \chapter{Teoria della calcolabilità}
+        \section{Macchine di Turing}
+            \begin{definitionbox}{Macchina di Turing deterministica}{}
+                E' una tupla $\mathcal{M}=\langle Q,\Sigma,\Gamma,\delta,q_0,B,F\rangle$ dove:
+                \begin{itemize}
+                    \item $Q$ è un insieme finito di stati
+                    \item $\Sigma$ è un alfabeto di input
+                    \item $\Gamma$ è un alfabeto del nastro che include l'alfabeto di input ($\Sigma\subseteq\Gamma$)
+                    \item $\delta$ è una funzione di transizione parziale della forma $Q \times \Gamma \to Q \times \Gamma \times \{L,R\}$. Questa funzione specifica l'azione successiva della macchina in base allo stato corrente e al simbolo letto sulla cella del nastro sotto la testina. L'azione consiste nel cambiare stato, scrivere un simbolo su quella cella (scrivere $B$ equivale a cancellare) e spostare la testina a sinistra ($L$) o a destra ($R$). Se per una data combinazione di stato e simbolo non è specificata alcuna azione, la macchina si ferma.
+                    \item $q_0$ è lo stato iniziale
+                    \item $B$ è un simbolo speciale che appartiene a $\Gamma$ ma non a $\Sigma$ ($B\in\Gamma\smallsetminus\Sigma$). Rappresenta una cella vuota o "blank" sul nastro.
+                    \item $F\subseteq Q$ è l'insieme degli stati finali
+                \end{itemize}
+            \end{definitionbox}
+            La scelta di avere due alfabeti e un insieme di stati finali è legata ala visione di una macchina di Turing come \textbf{riconoscitore}.\\
+            Una macchina di Turing può essere immaginata come:
+            \begin{itemize}
+                \item Un nastro, illimitato nei due sensi e suddiviso in celle. Sul nastro è presente un numero finito di simboli diversi da $B$
+                \item Una testina (di lettura e scrittura) posizionata su una cella del nastro
+                \item La testina si trova in un certo stato $q\in Q$
+            \end{itemize}
+            \begin{center}
+                \includegraphics[width=0.5\textwidth]{Images/turingmachine.png}
+            \end{center}
+            Il funzionamento è determinato dalla funzione di transizione: in ogni istante, in dipendenza deterministica dello stato della testina e del simbolo letto nella cella corrente, la macchina effettua un'azione che comporta: un cambiamento di stato, la scrittura di un simbolo di $\Gamma$ nella cella corrente e lo spostamento della testina a sinistra ($L$) o a destra ($R$) o rimane ferma ($N$).
+            \begin{itemize}
+                \item \textbf{Configurazioni}: sono rappresentate come $\langle \alpha, q, \beta \rangle$ dove: \begin{itemize}
+                    \item $\alpha$ sono i simboli a sinistra della testina
+                    \item $q$ è lo stato corrente della testina
+                    \item $\beta$ sono i simboli a destra della testina
+                \end{itemize}
+                Se $\beta$ è vuota, la testina punta a una cella $B$. Viene rappresentata solo la porzione significativa del nastro.
+                \item \textbf{Relazione di riduzione}: descrive come le configurazioni cambiano passo dopo passo. Per esempio, se $\delta(q, X) = \langle q', Y, R \rangle$, allora $\langle \alpha, q, X\beta \rangle \to \langle \alpha Y, q', \beta \rangle$ (spostamento a destra). Questa relazione è deterministica e, in generale, non terminante (possono esserci computazioni infinite)
+                \item \textbf{Configurazioni di arresto}: sono quelle per cui la funzione di transizione è indefinita (cioè $\delta(q, X)\uparrow$ o $\delta(q, B)\uparrow$)
+                \item \textbf{Direttive di Input/Output} \begin{itemize}
+                    \item \textbf{Input}: $f_{IN}(u) = \langle \epsilon, q_0, u \rangle$
+                    \item \textbf{Output}: $$f_{OUT}(\langle \alpha, q, \beta \rangle)=\begin{cases}
+                        \text{True} & \text{se } q\in F\\
+                        \text{False} & \text{altrimenti}
+                    \end{cases}$$
+                \end{itemize}
+                \item \textbf{Linguaggio accettato}: è l'insieme di tutte le stringhe $u$ che, partendo dalla configurazione iniziale, possono portare a una configurazione di accettazione. $$L(\mathcal{M}) = \{u \in \Sigma^* \mid \langle \varepsilon, q_0, u \rangle \to^* \langle \alpha, q, \beta \rangle, q \in F\}$$ Il contenuto finale del nastro è irrilevante ai fini dell'accettazione
+            \end{itemize}
+            \begin{example}
+                Prendi l'esempio 3.2.4 a pagina 41
+            \end{example}
+        \section{Funzioni T-calcolabili}
+            Le funzioni T-calcolabili sono quelle funzioni che possono essere calcolate da una Macchina di Turing (TM).\\
+            Consideriamo una definizione di TM semplificata: 
+            $$\mathcal{M}=\langle Q,\Sigma,\delta,q_0,B\rangle$$
+            dove $\Sigma=\Gamma$ include almeno un altro simbolo oltre al blank $B$, e la funzione di transizione $\delta : Q \times \Sigma \to Q \times \Sigma \times \{L,R\}$ è una funzione parziale.\\
+            Per calcolare una funzione $f : Input \to Output$, è necessario stabilire un modo per codificare gli elementi del dominio e del codominio come stringhe sul nastro della TM. Questo si realizza tramite due funzioni iniettive: $c_{IN} : Input \to \Sigma^*$ per l'input e $c_{OUT} : Output \to \Sigma^*$ per l'output.
+            \begin{itemize}
+                \item \textbf{Direttive di Input/Output} \begin{itemize}
+                    \item \textbf{Input}: La testina è inizialmente posizionata sul primo simbolo della stringa che rappresenta l'input. La configurazione iniziale per un input $i$ è $f_{IN}(i) = \langle \varepsilon, q_0, c_{IN}(i) \rangle$
+                    \item \textbf{Output}: Il risultato della funzione è rappresentato dalla stringa che rimane sul nastro quando l'esecuzione della macchina termina. Se la stringa sul nastro rappresenta effettivamente un risultato valido (secondo la codifica $c_{OUT}$), allora la funzione è definita per quell'input; altrimenti, la funzione risulta indefinita (o "malformata" se si ferma in una configurazione non valida). Formalmente $$f_{OUT}(\langle\alpha,q,\beta\rangle)=\begin{cases}
+                        o & \text{se } c_{OUT}(\alpha\beta)=o\\
+                        \text{Indefinito} & \text{altrimenti}
+                    \end{cases}$$
+                \end{itemize}
+            \end{itemize}
+            \begin{example}
+                Esempio 3.2.6 pagina 43
+            \end{example}
+        \section{Nozione di algoritmo e funzioni ricorsive primitive}
+            \subsection{Funzioni Ricorsive Primitive $\mathcal{PR}$}
+                Per tentare di formalizzare la nozione di funzione calcolabile, vengono introdotte le funzioni ricorsive primitive ($\mathcal{PR}$). Si tratta di funzioni da $\mathbb{N}^k$ in $\mathbb{N}$ (con $k \ge 0$) definite induttivamente a partire da un insieme di funzioni base e schemi di costruzione:
+                \begin{itemize}
+                    \item \textbf{Funzioni base}: \begin{itemize}
+                        \item Funzione zero ($Z(x_1, \dots, x_n) = 0$): Restituisce sempre 0, indipendentemente dagli input
+                        \item Funzione successore ($S(x) = x+1$): Aggiunge 1 al suo argomento
+                        \item Funzione proiezione ($\Pi^n_i(x_1, \dots, x_n) = x_i$): Restituisce il valore del $i$-esimo argomento di una tupla di $n$ argomenti
+                    \end{itemize}
+                    \item \textbf{Schemi di costruzione}: \begin{itemize}
+                        \item \textbf{Composizione}: Se $h: \mathbb{N}^k \to \mathbb{N}$ e $g_i: \mathbb{N}^n \to \mathbb{N}$ (per $i \in [1, k]$) sono $\mathcal{PR}$, allora anche $f(x_1, \dots, x_n) = h(g_1(x_1, \dots, x_n), \dots, g_k(x_1, \dots, x_n))$ è $\mathcal{PR}$
+                        \item \textbf{Ricorsione primitiva}: Se $g: \mathbb{N}^{n-1} \to \mathbb{N}$ e $h: \mathbb{N}^{n+1} \to \mathbb{N}$ sono $\mathcal{PR}$, allora anche $f: \mathbb{N}^n \to \mathbb{N}$ è $\mathcal{PR}$ se definita come: \begin{itemize}
+                            \item Caso base: $f(x_1, \dots, x_{n-1}, 0) = g(x_1, \dots, x_{n-1})$
+                            \item Chiamata ricorsiva: $f(x_1, \dots, x_{n-1}, y+1) = h(x_1, \dots, x_{n-1}, y, f(x_1, \dots, x_{n-1}, y))$
+                        \end{itemize}
+                    \end{itemize}
+                \end{itemize}
+                Una funzione è ricorsiva primitiva se può essere costruita a partire dalle funzioni banalmente calcolabili di base, utilizzando la composizione (generalizzata) e un meccanismo di ricorsione molto semplice nel quale il caso base è zero e la chiamata ricorsiva è sempre effettuata sul predecessore, in modo che la ricorsione sia sempre terminante.\\
+                Introduciamo un semplice linguaggio di programmazione:
+                \begin{itemize}
+                    \item \textbf{Struttura del programma}: \begin{itemize}
+                        \item Un programma è una sequenza di dichiarazioni di funzione
+                        \item Si assume l'esistenza di un insieme di nomi di funzione (es. $f$) con una certa arità (numero di parametri) e un insieme di variabili (es. $x, y, z$)
+                    \end{itemize}
+                    \item \textbf{Formati delle Dichiarazioni di Funzione}: \begin{itemize}
+                        \item Formato generale: $f(x_1, \ldots, x_n) = e$. Questa è la forma per le funzioni definite tramite le funzioni base (zero, successore, proiezione) o composizione
+                        \item Formato per ricorsione primitiva (se $n>0$): \begin{itemize}
+                            \item $f(x_1, \ldots, x_{n-1}, Z) = e$ (caso base)
+                            \item $f(x_1, \ldots, x_{n-1}, S(y)) = e'$ (passo ricorsivo) In questo caso, la funzione $f$ è definita per ricorsione primitiva.
+                        \end{itemize}
+                    \end{itemize}
+                    \item Definizione delle Espressioni ($e$): $$e::=x|Z|S(e)|f(e_1,\ldots,e_n)$$
+                    \item Vincoli Contestuali: Questo linguaggio include delle regole per la correttezza del codice: \begin{itemize}
+                        \item Un nome di funzione non può essere dichiarato più volte
+                        \item Una variabile non può apparire più di una volta come parametro di una funzione
+                        \item Ogni dichiarazione di funzione può contenere chiamate solo a funzioni dichiarate precedentemente
+                        \item Nel caso di una funzione definita per ricorsione primitiva, l'espressione $e'$ (del passo ricorsivo) può contenere chiamate ricorsive a $f$, ma solo nella forma $f(x_1, \ldots, x_{n-1}, y)$ (cioè, la chiamata ricorsiva è sempre sul predecessore dell'ultimo argomento)
+                        \item In ogni chiamata di funzione, il numero degli argomenti deve corrispondere all'arità (il numero di parametri attesi)
+                        \item L'ultima funzione dichiarata in un programma è considerata la funzione principale
+                    \end{itemize}
+                    \item \textbf{Direttive di Esecuzione (Sistema di Transizione)}: \begin{itemize}
+                        \item Le configurazioni sono rappresentate da espressioni senza variabili
+                        \item Le direttive consistono nel procedere per sostituzioni successive fino a raggiungere il risultato finale
+                        \item Le regole di riduzione specificano come le espressioni vengono semplificate: \begin{itemize}
+                            \item Se c'è una dichiarazione $f(x_1, \ldots, x_n) = e$, allora $f(e_1, \ldots, e_n)$ si riduce a $e$ con i parametri sostituiti dagli argomenti ($e[e_1/x_1 \ldots e_n/x_n]$)
+                            \item Per le funzioni definite per ricorsione primitiva ($f(x_1, \ldots, x_{n-1}, Z) = e$ \\
+                            e $f(x_1, \ldots, x_{n-1}, S(y)) = e'$): \begin{itemize}
+                                \item $f(e_1, \ldots, e_{n-1}, Z)$ si riduce a $e$ con i parametri sostituiti
+                                \item $f(e_1, \ldots, e_{n-1}, S(e_n))$ si riduce a $e'$ con i parametri sostituiti
+                            \end{itemize}
+                        \end{itemize}
+                        \item Le riduzioni possono essere applicate anche all'interno di espressioni più complesse: se $e$ si riduce a $e'$, allora $S(e)$ si riduce a $S(e')$, e $f(... , e_i, ...)$ si riduce a $f(... , e'_i, ...)$
+                    \end{itemize}
+                    \item \textbf{Configurazioni di Arresto}: \begin{itemize}
+                        \item Le configurazioni di arresto sono quelle della forma $S^x(Z)$, che rappresentano i numeri naturali (es. $S(S(Z))$ rappresenta 2). Queste sono abbreviate come $\bar{x}$ (es. $\bar{2}$)
+                    \end{itemize}
+                    \item \textbf{Direttive di Input/Output}: \begin{itemize}
+                        \item \textbf{Input}: L'input $x_1, \ldots, x_n$ per la funzione principale $f$ viene codificato come $f(\bar{x}_1, ..., \bar{x}_n)$
+                        \item \textbf{Output}: L'output $\bar{x}$ (una rappresentazione di numero naturale) viene decodificato nel numero $x$
+                    \end{itemize}
+                \end{itemize}
+                \begin{example}
+                    
+                \end{example}
+                Le direttive di esecuzione sono non deterministiche (più scelte possibili, ad esempio nell'ordine di valutazione di sotto-espressioni), ma il risultato finale è sempre lo stesso. Questo è perché, come provato per induzione, tutte le funzioni ricorsive primitive sono totali, ovvero definite su ogni possibile argomento e garantiscono sempre la terminazione. Questo è il motivo per cui il meccanismo di ricorsione è descritto come "molto semplice" e sempre terminante, poiché il caso base è zero e la chiamata ricorsiva è sempre effettuata sul predecessore.
 \end{document}
