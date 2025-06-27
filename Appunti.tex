@@ -788,9 +788,18 @@
                 \end{itemize}
                 \item \textbf{Linguaggio accettato}: è l'insieme di tutte le stringhe $u$ che, partendo dalla configurazione iniziale, possono portare a una configurazione di accettazione. $$L(\mathcal{M}) = \{u \in \Sigma^* \mid \langle \varepsilon, q_0, u \rangle \to^* \langle \alpha, q, \beta \rangle, q \in F\}$$ Il contenuto finale del nastro è irrilevante ai fini dell'accettazione
             \end{itemize}
+            \begin{definitionbox}{Linguaggi ricorsivamente enumerabili}{}
+                Un linguaggi è \textbf{ricorsivamente enumerabile} se è accettato da una macchina di Turing
+            \end{definitionbox}
+            \begin{definitionbox}{Linguaggi ricorsivi}{}
+                Un linguaggio è \textbf{ricorsivo} se è accettato da una macchina di Turing che termina su ogni input
+            \end{definitionbox}
             \begin{example}
                 Prendi l'esempio 3.2.4 a pagina 41
             \end{example}
+            \begin{exercise}
+                Qui metto un esercizio da esame per costruire una macchina di turing dato un linguaggio
+            \end{exercise}        
         \section{Funzioni T-calcolabili}
             Le funzioni T-calcolabili sono quelle funzioni che possono essere calcolate da una Macchina di Turing (TM).\\
             Consideriamo una definizione di TM semplificata: 
@@ -809,6 +818,15 @@
             \begin{example}
                 Esempio 3.2.6 pagina 43
             \end{example}
+        \section{Tesi di Church-Turing}
+            Sebbene le MT non abbiano istruzioni come \texttt{goto} o la possibilità di accedere alla memoria tramite indici come in un linguaggio di programmazione convenzionale, dimostrano una sorprendente potenza espressiva. Concetti come i "salti" possono essere realizzati tramite sequenze di spostamenti elementari della testina sul nastro. Le MT possono essere considerate una versione embrionale dell'architettura di Von Neumann.
+            \subsection{La tesi}
+                La Tesi di Church-Turing afferma che una funzione è calcolabile con un algoritmo se e solo se è ricorsiva (parziale). Ciò significa che la classe delle funzioni T-calcolabili (quelle calcolabili da una Macchina di Turing) è identificata con la classe intuitiva delle funzioni "calcolabili con un algoritmo". Non può essere dimostrata formalmente. È una congettura che collega una nozione informale e intuitiva ("calcolabile con un algoritmo") a una nozione matematica precisa (funzione ricorsiva o T-calcolabile) però ci sono diversi argomenti significativi che ne rafforzano la validità:
+                \begin{itemize}
+                    \item \textbf{Equivalenza dei Formalismi}: Tutti i formalismi di calcolo proposti indipendentemente (come le funzioni $\mu$-ricorsive, il lambda-calcolo, le Random Access Machine, le macchine a contatori) si sono dimostrati equivalenti alle Macchine di Turing. Tutti definiscono la stessa classe di funzioni calcolabili, chiamata la classe delle funzioni ricorsive (parziali)
+                    \item \textbf{Potere Espressivo}: Ogni funzione che può essere ragionevolmente considerata "algoritmica" si è rivelata appartenere a questa classe
+                    \item \textbf{Algoritmi di Trasformazione}: Le dimostrazioni di equivalenza tra formalismi spesso mostrano che esiste un algoritmo che, dato un programma in un formalismo, produce un programma equivalente nel secondo formalismo. Questo implica che ogni formalismo offre tutti i possibili algoritmi
+                \end{itemize}
         \section{Nozione di algoritmo e funzioni ricorsive primitive}
             \subsection{Funzioni Ricorsive Primitive $\mathcal{PR}$}
                 Per tentare di formalizzare la nozione di funzione calcolabile, vengono introdotte le funzioni ricorsive primitive ($\mathcal{PR}$). Si tratta di funzioni da $\mathbb{N}^k$ in $\mathbb{N}$ (con $k \ge 0$) definite induttivamente a partire da un insieme di funzioni base e schemi di costruzione:
@@ -874,4 +892,188 @@
                     
                 \end{example}
                 Le direttive di esecuzione sono non deterministiche (più scelte possibili, ad esempio nell'ordine di valutazione di sotto-espressioni), ma il risultato finale è sempre lo stesso. Questo è perché, come provato per induzione, tutte le funzioni ricorsive primitive sono totali, ovvero definite su ogni possibile argomento e garantiscono sempre la terminazione. Questo è il motivo per cui il meccanismo di ricorsione è descritto come "molto semplice" e sempre terminante, poiché il caso base è zero e la chiamata ricorsiva è sempre effettuata sul predecessore.
+                \begin{definitionbox}{}{}
+                    I programmi che calcolano funzioni ricorsive primitive possono essere numerati \textit{effettivamente}.
+                \end{definitionbox}
+                "Numerare effettivamente" significa che esiste un algoritmo in grado di elencare questi programmi uno dopo l'altro. Inoltre, la corrispondenza è bidirezionale: dato un programma, si può calcolare il suo numero d'ordine, e viceversa, dato un numero n, si può costruire l'n-esimo programma.
+                \begin{itemize}
+                    \item Un programma è considerato una stringa su un alfabeto (un insieme finito di simboli)
+                    \item È possibile ordinare queste stringhe, ad esempio per lunghezza e poi lessicograficamente per quelle di uguale lunghezza
+                    \item Questo ordinamento permette di elencare i programmi ben formati in una sequenza, associando a ciascuno un numero naturale (il suo posto nell'elenco)
+                \end{itemize}
+                \begin{theorembox}{}{}
+                    Esistono funzioni calcolabili con un algoritmo che non sono ricorsive primitive
+                \end{theorembox}
+                 Il teorema afferma che la classe delle funzioni ricorsive primitive ($\mathcal{PR}$) non è sufficiente a rappresentare tutte le funzioni che possono essere calcolate tramite un algoritmo. In altre parole, esistono funzioni che sono evidentemente calcolabili da un algoritmo, ma che non rientrano nella definizione di funzione ricorsiva primitiva. La prova di questo teorema si basa su un metodo chiamato \textbf{diagonalizzazione}:
+                 \begin{itemize}
+                    \item Questo metodo sfrutta il fatto che i programmi (o algoritmi) che calcolano funzioni ricorsive primitive possono essere numerati effettivamente. Questo significa che è possibile associare a ogni funzione ricorsiva primitiva a una variabile un indice naturale, creando un elenco enumerabile: ${f_x | x \ge 0}$
+                    \item Si definisce quindi una nuova funzione $f$ come $f(x) = f_x(x) + 1$
+                    \item Questa funzione $f$ è ovviamente calcolabile con un algoritmo. Il motivo è che la numerazione $f_x$ è algoritmica (cioè, possiamo generare l'$x$-esimo programma) e ogni $f_x$ è a sua volta calcolabile con un algoritmo
+                    \item Tuttavia, questa funzione $f$ non può appartenere alla classe delle funzioni ricorsive primitive. Se $f$ fosse ricorsiva primitiva, esisterebbe un indice $\bar{x}$ tale che $f = f_{\bar{x}}$. Ma allora, applicando $f$ a $\bar{x}$, si otterrebbe la contraddizione $f(\bar{x}) = f_{\bar{x}}(\bar{x}) = f_{\bar{x}}(\bar{x}) + 1$. Questa contraddizione dimostra che $f$ non può essere ricorsiva primitiva
+                 \end{itemize}
+                 Il nome "diagonalizzazione" deriva dall'idea di una matrice dove le righe sono gli indici ($x$) e le colonne sono gli argomenti ($y$), e la funzione $f$ è costruita per essere diversa, per ogni argomento $x$, dal valore $f_x(x)$ che appare sulla diagonale della matrice.\\
+                 \textbf{Requisiti}: \begin{itemize}
+                    \item Esiste una numerazione algoritmica degli algoritmi che definiscono le funzioni della classe
+                    \item Le funzioni della classe sono totali (cioè, definite su tutti gli input). Poiché le funzioni ricorsive primitive sono per definizione totali e i loro programmi possono essere numerati effettivamente, la diagonalizzazione è applicabile
+                 \end{itemize}
+        \section{Numerazione algoritmica delle funzioni ricorsive}
+            Analogamente a quanto visto per le funzioni ricorsive primitive, è possibile codificare qualsiasi Macchina di Turing come una stringa su un alfabeto fissato $\Sigma$. Questo è possibile perché il funzionamento di una macchina è indipendente dai nomi scelti per stati e simboli, quindi si possono sempre considerare stati e simboli numerati in $\mathbb{N}$. Le quintuple che descrivono le transizioni di una MT (stato corrente, simbolo letto, nuovo stato, simbolo scritto, direzione di spostamento) possono essere rappresentate come sequenze di numeri d'ordine e poi codificate come stringhe. L'intera funzione di transizione di una MT può essere codificata come la concatenazione di queste stringhe, usando un separatore specifico (ad esempio, 11). In questo modo, si ottiene una codifica unica ($\langle\mathcal{M}\rangle$) per ogni macchina $\mathcal{M}$
+            \begin{definitionbox}{}{}
+                Le macchine di Turing possono essere numerate \textit{effettivamente}.
+            \end{definitionbox}
+            Questo significa che, una volta che tutte le macchine sono rappresentate come stringhe su un alfabeto, si può procedere per elencazione (generare una stringa dopo l'altra in un ordine prestabilito), proprio come avviene per i programmi che calcolano funzioni ricorsive primitive.
+            \begin{definitionbox}{}{}
+                Le funzioni ricorsive ($\mathbb{N}\to\mathbb{N}$) possono essere numerate effettivamente.
+            \end{definitionbox}
+            Questa è una conseguenza diretta della definizione precedente e della Tesi di Church-Turing.\\
+            \textbf{Glossario:}
+            \begin{itemize}
+                \item $\mathcal{M}_x$: la macchina di Turing con indice $x$ nella numerazione
+                \item $\phi_x$: la funzione $\mathbb{N}\to\mathbb{N}$ calcolata da $\mathcal{M}_x$
+            \end{itemize}
+            \subsection{Osservazioni}
+            \begin{itemize}
+                \item La numerazione può essere estesa a funzioni ricorsive da qualsiasi insieme A a qualsiasi insieme B, purché vengano utilizzate codifiche "ragionevoli"
+                \item È cruciale notare che $n \neq m$ non implica necessariamente $\phi_n \neq \phi_m$. Questo significa che algoritmi diversi (con indici diversi) possono calcolare la stessa identica funzione
+                \item Conoscere un algoritmo che calcola una funzione ricorsiva $f$ è equivalente a conoscere almeno un numero $n$ tale che $f = \phi_n$. Viceversa, dato un indice $n$, si può costruire la rappresentazione della macchina corrispondente e quindi un algoritmo
+                \item Vi è una differenza significativa tra affermare che una funzione "è ricorsiva" (proprietà della funzione stessa) e affermare che "si conosce $n$ tale che $f = \phi_n$" (si ha un'implementazione specifica)
+            \end{itemize}
+            \subsection{Corollari}
+            \begin{itemize}
+                \item Le funzioni ricorsive (e anche le funzioni ricorsive totali) hanno la cardinalità del numerabile. Tuttavia, le funzioni ricorsive totali non possono essere numerate effettivamente (decisivamente), poiché non è possibile stabilire algoritmicamente se un algoritmo calcola una funzione totale
+                \item Esistono funzioni, sia parziali che totali, che non sono ricorsive. Ciò si deduce dal fatto che l'insieme delle funzioni caratteristiche dei sottoinsiemi di N ha una cardinalità strettamente maggiore
+                \item Ogni funzione ricorsiva possiede un'infinità numerabile di indici nella numerazione effettiva. Questo perché è sempre possibile creare varianti di una MT (ad esempio, aggiungendo stati o istruzioni inutili) che calcolano la stessa funzione ma hanno un indice diverso
+            \end{itemize}
+            Esiste una corrispondenza biunivoca tra tutte le possibili macchine di Turing (algoritmi), tutte le stringhe (su un certo alfabeto $\Sigma$) che le rappresentano (rappresentazioni degli algoritmi), e i numeri naturali (indici degli algoritmi). \textbf{Essenziale è la possibilità di vedere le stringhe (o, ancora più astrattamente, i numeri naturali) al tempo stesso come dati(argomenti del calcolo) e programmi (macchine che eseguono il calcolo)}. Questo permette di applicare ai formalismi analizzati finora uno dei principi base dell'informatica, ossia quello di poter \underline{passare programmi come argomenti ad altri programmi}.
+            \section{Macchina di Turing universale e calcolatore}
+                Una Macchina di Turing (MT) può essere vista come un programma, ma la sua funzione di transizione (il suo "programma") è fissa.\\
+                Un calcolatore moderno, invece, riceve programmi come dati in ingresso, insieme ai dati stessi da elaborare.\\
+                Questo suggerisce che un calcolatore è a sua volta un programma e
+                in accordo con la Tesi di Church-Turing (che identifica le funzioni calcolabili con gli algoritmi formalizzabili), se un calcolatore è un programma, allora deve corrispondere a una Macchina di Turing.
+                \begin{definitionbox}{}{}
+                    La funzione universale $f_U:\mathbb{N}\times\mathbb{N}\to\mathbb{N}$ è definita come 
+                    $$
+                    f_U(x,y)=\begin{cases}
+                        \phi_x(y) & \text{se } \phi_x(y)\downarrow \text{ (è definita)}\\
+                        \text{indefinito} & \text{altrimenti}
+                    \end{cases}
+                    $$
+                \end{definitionbox}
+                Il teorema afferma che $f_U$ è ricorsiva, il che significa che esiste una Macchina di Turing in grado di calcolarla.\\
+                \textbf{Prova}: La funzione $f_U$ può essere calcolata mediante un algoritmo che prende in input $x$ e $y$, genera la macchina $\mathcal{M}_x$ (corrispondente all'indice $x$), e poi esegue/simula $\mathcal{M}_x$ sull'input $y$. La Tesi di Church-Turing giustifica il fatto che $f_U$ sia ricorsiva.
+            \section{Risolvibilità di problemi}
+                \subsection{Problema dell'arresto}
+                    Il Problema dell'arresto (o Halting Problem) ha come obiettivo l'identificazione della classe dei problemi risolvibili tramite un elaboratore.
+                    \begin{itemize}
+                        \item \textbf{Definizione}: Il Problema dell'arresto si chiede se esista un programma (o algoritmo) che, dati in input un qualunque programma $P$ e un suo input $y$, sia in grado di stabilire se il programma $P$ eseguito su $y$ termina o meno.
+                    \end{itemize}
+                    \begin{theorembox}{Indecidibilità del problema dell'arresto}{haltingproblem}
+                        La funzione $f_{\mathcal{H}}:\mathbb{N}\times\mathbb{N}\to\mathbb{N}$ è definita da:
+                        $$
+                        f_{\mathcal{H}}(x,y)=\begin{cases}
+                            1 & \text{se }\phi_x(y)\downarrow\\
+                            0 & \text{altrimenti}\\
+                        \end{cases}
+                        $$
+                    \end{theorembox}
+                    La funzione $f_{\mathcal{H}}$ non è ricorsiva. Questo significa che il Problema dell'arresto è indecidibile, ciò implica che non è possibile dare un algoritmo generale che, esaminando unicamente il codice del programma $P$ e l'input $y$, determini con certezza se $P$ terminerà o meno su $y$. Simulando l'esecuzione del programma (cosa possibile con una Macchina di Turing Universale), si ottiene una risposta positiva solo se il programma termina; se non termina, la simulazione potrebbe proseguire all'infinito senza fornire una risposta.\\
+                    Prima di dimostrare il teorema introduciamo un lemma
+                    \begin{lemma}{}{}
+                        La funzione $f_\mathcal{K}:\mathbb{N}\to\mathbb{N}$ definita da:
+                        $$f_\mathcal{K}(x)=\begin{cases}
+                            1 & \text{se }\phi_x(x)\downarrow\\
+                            0 & \text{altrimenti}
+                        \end{cases}$$
+                        Non è ricorsiva.
+                    \end{lemma}
+                    \begin{demonstration}
+                        \begin{itemize}
+                            \item Si assume che $f_\mathcal{K}$ sia ricorsiva, ovvero che esista una MT $\mathcal{M}_\mathcal{K}$ che la calcola
+                            \item Si costruisce una nuova funzione $g$ (e il suo algoritmo): \begin{enumerate}
+                                \item input $x$
+                                \item se $\mathcal{M}_\mathcal{K}(x) = 1$ (cioè $\phi_x(x)$ termina), allora $g$ non termina
+                                \item altrimenti ($\mathcal{M}_\mathcal{K}(x) = 0$, cioè $\phi_x(x)$ non termina), $g$ restituisce 1
+                            \end{enumerate} 
+                            \item Per la Tesi di Church-Turing, se $g$ è algoritmica, allora deve esistere un indice $\bar{z}$ tale che $g = \phi_{\bar{z}}$ e considerando il comportamento di $\phi_{\bar{z}}(\bar{z})$: \begin{itemize}
+                                \item $\phi_{\bar{z}}(\bar{z})\uparrow\iff g(\bar{z})\uparrow\iff f_\mathcal{K}(\bar{z})=1\iff \phi_{\bar{z}}(\bar{z})\downarrow$
+                                \item $\phi_{\bar{z}}(\bar{z})=1\iff g(\bar{z})=1\iff f_\mathcal{K}(\bar{z})=0\iff \phi_{\bar{z}}(\bar{z})\uparrow$
+                            \end{itemize}
+                        \end{itemize}
+                    \end{demonstration}
+                    Il lemma implica il teorema in quanto, se la funzione $f_\mathcal{H}$ fosse ricorsiva, lo sarebbe anche $f_\mathcal{K}$ poichè $f_\mathcal{K}(x)=f_\mathcal{H}(x,x)$, contraddicendo il lemma.
+                \subsection{Insiemi ricorsivi e ricorsivamente numerabili}
+                    Possiamo esprimere il teorema \ref{thm:haltingproblem} dicendo che:
+                    \begin{itemize}
+                        \item $\mathcal{H}=\{\langle x,y\rangle\mid x,y\in\mathbb{N},\phi_x(y)\downarrow\}$ (le coppie programma-input per cui il programma termina) è un sottoinsieme di $\mathbb{N}\times\mathbb{N}$ che non è ricorsivo
+                        \item $\mathcal{K}=\{x\mid x\in\mathbb{N},\phi_x(x)\downarrow\}$  (i programmi che terminano su se stessi) non è ricorsivo. $\mathcal{K}$ è un caso particolare di $\mathcal{H}$, poiché $f_\mathcal{K}(x) = f_\mathcal{H}(x, x)$
+                    \end{itemize}
+                    Le nozioni di insieme ricorsivo e ricorsivamente enumerabile posso essere anche formulate nel modo seguente:
+                    \begin{itemize}
+                        \item Un insieme $A\subseteq\mathbb{N}$ è ricorsivamente enumerabile se esiste una funzione ricorsiva $f:\mathbb{N}\to\{0,1\}$ tale che: $$f(x)=\begin{cases}
+                            1 & \text{se }x\in A\\
+                            0\text{ oppure indefinito} & \text{altrimenti}\\
+                        \end{cases}$$ Questo significa che esiste una Macchina di Turing (o un algoritmo) che, per ogni input $x \in \mathbb{N}$, termina sempre e restituisce 1 se $x \in A$ oppure 0 se $x \notin A$. Gli insiemi ricorsivi corrispondono ai problemi decidibili. Tutti gli insiemi finiti e quelli il cui complementare è finito sono esempi di insiemi ricorsivi.
+                        \item Un insieme $A\subseteq\mathbb{N}$ è ricorsivamente enumerabile se la sua funzione semicaratteristica $\psi_A$ è ricorsiva: $$\psi_A(x)=\begin{cases}
+                            1 & \text{se } x\in A \\
+                            \text{indefinito} & \text{altrimenti}
+                        \end{cases}$$ Questo significa che esiste una Macchina di Turing (o un algoritmo) che, per ogni input $x \in \mathbb{N}$, restituisce 1 se $x \in A$, ma potrebbe non terminare (o restituire 0) se $x \notin A$. Gli insiemi r.e. corrispondono ai problemi semidecidibili. Un problema è semidecidibile se esiste un algoritmo che, per le istanze per cui la risposta è "vero", fornisce una risposta positiva in un numero finito di passi, mentre per le istanze per cui la risposta è "falso" potrebbe non terminare.  L'insieme $\mathcal{H}$ (e $\mathcal{K}$) è un esempio di insieme r.e. ma non ricorsivo.
+                    \end{itemize}
+                    \begin{theorembox}{Il teorema di Post}{}
+                        $A$ ricorsivo $\iff\bar{A}$ ricorsivo $\iff A$ e $\bar{A}$ ricorsivamente enumerabili
+                    \end{theorembox}
+                    \begin{demonstration}
+                        \begin{itemize}
+                            \item ($\Rightarrow$) Se $A$ è ricorsivo, esiste un algoritmo $\mathcal{M}_A$ che termina sempre e restituisce 1 per $x \in A$ e 0 per $x \notin A$. Per ottenere un algoritmo per $A$, basta invertire l'output di $\mathcal{M}_A$ (restituire 0 se $\mathcal{M}_A(x)$ è 1 e viceversa). Entrambi gli insiemi sono quindi ricorsivi e di conseguenza r.e.
+                            \item ($\Leftarrow$) Se $A$ e $\bar{A}$ sono entrambi r.e., esistono due algoritmi che terminano con 1 rispettivamente se l'input appartiene ad $A$ o a $\bar{A}$. Per decidere se $x \in A$, basta eseguire i due algoritmi in interleaving, alternando passi di esecuzione dell'uno e dell'altro. Poiché ogni $x$ appartiene o ad $A$ o ad $\bar{A}$, una delle due esecuzioni terminerà, fornendo una risposta definita (1 o 0), garantendo la terminazione e quindi la ricorsività dell'insieme
+                        \end{itemize}
+                    \end{demonstration}
+                    Dal Teorema di Post e dal fatto che $\mathcal{K}$ è r.e. ma non ricorsivo, si deduce che il suo complemento $\mathcal{K} = \{x | \phi_x(x)\uparrow\}$ (l'insieme dei programmi che non terminano su se stessi) non è ricorsivamente enumerabile.
+                    \begin{theorembox}{Caratterizzazione degli insiemi r.e.}{}
+                        Questo teorema fornisce formulazioni equivalenti per la definizione di insieme r.e.:
+                        \begin{enumerate}
+                            \item Un insieme $A$ è ricorsivamente enumerabile
+                            \item $A$ è l'immagine (l'insieme dei valori) di una funzione ricorsiva
+                            \item $A$ è l'insieme vuoto, oppure è l'immagine di una funzione ricorsiva totale
+                        \end{enumerate}
+                    \end{theorembox}
+                    \begin{demonstration}
+                        \begin{itemize}
+                            \item \textbf{(1)$\Rightarrow$(2)}: Un insieme $A$ è r.e. se la sua funzione semicaratteristica $\psi_A$ è ricorsiva. Questo significa che esiste un algoritmo (una Macchina di Turing) che, per ogni input $x$: \begin{itemize}
+                                \item Restituisce 1 se $x \in A$
+                                \item Non termina o restituisce 0 altrimenti (ovvero, se $x \notin A$)
+                            \end{itemize}
+                            Possiamo modificare l'algoritmo in modo tale che, per ogni $x\in\mathbb{N}$, invece di restituire 1  restituisca $x$. Questo algoritmo definisce una funzione ricorsiva $f$ il cui insieme di valri è $A$
+                            \item \textbf{(2)$\Rightarrow$(3)}: Il punto precedente non fornisce un algoritmo (o MT) per generare tutti gli elementi di $A$, in quanto il calcolo di $f(x)$ potrebbe non terminare su qualche $x$. Per superare questo problema, utilizziamo una tecnica di enumerazione nota come "\textbf{zig-zag}". Questa tecnica ci permette di esplorare tutte le possibili computazioni di $f$ per tutti i possibili input in un modo che garantisce che, se una computazione termina, essa verrà trovata in un tempo finito.
+                            \item \textbf{(3)$\Rightarrow$(1)}: Se $A$ è l'insieme vuoto ($\emptyset$), è per definizione ricorsivamente enumerabile. Altrimenti sia $f$ la funzione totale il cui insieme di valori è $A$. Definiamo allora la funzione semicaratteristica $g$ nel modo seguente: $$g(x)=\begin{cases}
+                                1 & \text{se } f(y)=x \text{ per qualche } y\\
+                                \text{indefinito} & \text{altrimenti}
+                            \end{cases}$$ Questo significa che, dato un input $x$, l'algoritmo per $g(x)$ deve eseguire l'algoritmo che genera successivamente tutti gli elementi di $A$. Pertanto, questa funzione $g$ è ricorsiva, e di conseguenza, $A$ è ricorsivamente enumerabile
+                        \end{itemize}
+                    \end{demonstration}
+                    \subsubsection{Approfondimento: Tecnica a "zig-zag"}
+                        Immagina una griglia infinita:
+                        \begin{itemize}
+                            \item Le righe rappresentano i possibili input per la funzione $f$
+                            \item Le colonne rappresentano il numero di passi di calcolo che concediamo a $f$ per un dato input
+                            \item Ogni "cella" \texttt{(input, passi)} della griglia rappresenta "cosa succede se eseguo $f(\texttt{input})$ per passi istruzioni"
+                        \end{itemize}
+                        Invece di percorrere la griglia per righe o per colonne, la tecnica a zig-zag ci suggerisce di percorrerla in diagonale. Questo garantisce che, se un calcolo di $f(x)$ termina per qualche $x$, lo troveremo prima o poi.
+                \subsection{Problemi decidibili e indecidibili}
+                    Un problema di decisione è una domanda che può avere come risposta "sì" o "no" per ogni istanza data. Per formalizzare un problema di decisione, lo si può esprimere in due modi equivalenti:
+                    \begin{itemize}
+                        \item Come una funzione $\mathcal{P}$ che prende un'istanza del problema come input e restituisce 0 o 1 (dove 1 sta per "vero" e 0 per "falso"). Questo è anche chiamato un \textbf{predicato}
+                        \item Come l'insieme di tutte le istanze per cui la risposta è "sì" ($\{a\in A\mid\mathcal{P}(a)=1\}$)
+                    \end{itemize}
+                    A partire da questa formalizzazione, vengono definite due proprietà chiave per i problemi di decisione:
+                    \begin{itemize}
+                        \item \textbf{Problema decidibile}: Un problema di decisione $\mathcal{P}$ è decidibile se l'insieme delle sue istanze per cui $\mathcal{P}$ è vero è ricorsivo. Questo significa che esiste un algoritmo che, per ogni istanza del problema, fornisce una risposta (\textbf{positiva o negativa}) in un numero finito di passi. L'algoritmo termina sempre, indipendentemente dalla risposta. Esempi: \begin{itemize}
+                            \item Determinare se un grafo è aciclico
+                            \item Determinare se un grafo è aciclico
+                            \item Determinare se una sequenza compare come sottosequenza di un'altra
+                            \item Decidere se una stringa su $\{0, 1\}$ ha un numero pari di 1
+                            \item Decidere se una stringa $u$ appartiene a un linguaggio $L$ (se $L$ è decidibile)
+                        \end{itemize}
+                        \item \textbf{Problema semidecidibile}: Un problema di decisione $\mathcal{P}$ è semidecidibile se l'insieme delle sue istanze per cui $\mathcal{P}$ è vero è ricorsivamente enumerabile. Questo significa che esiste un algoritmo che, per le istanze per cui $\mathcal{P}$ è vero, fornisce una risposta \textbf{positiva} in un numero finito di passi; tuttavia, per le istanze per cui $\mathcal{P}$ è falso, l'algoritmo potrebbe anche non terminare
+                    \end{itemize}
+
 \end{document}

@@ -17,6 +17,17 @@
 \contentsline {subsubsection}{Proprietà di Chiusura}{20}{subsubsection*.2}%
 \contentsline {chapter}{\numberline {3}Teoria della calcolabilità}{21}{chapter.3}%
 \contentsline {section}{\numberline {3.1}Macchine di Turing}{21}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Funzioni T-calcolabili}{22}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Nozione di algoritmo e funzioni ricorsive primitive}{23}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}Funzioni Ricorsive Primitive $\mathcal {PR}$}{23}{subsection.3.3.1}%
+\contentsline {section}{\numberline {3.2}Funzioni T-calcolabili}{23}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Tesi di Church-Turing}{23}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}La tesi}{23}{subsection.3.3.1}%
+\contentsline {section}{\numberline {3.4}Nozione di algoritmo e funzioni ricorsive primitive}{24}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Funzioni Ricorsive Primitive $\mathcal {PR}$}{24}{subsection.3.4.1}%
+\contentsline {section}{\numberline {3.5}Numerazione algoritmica delle funzioni ricorsive}{26}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Osservazioni}{27}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Corollari}{27}{subsection.3.5.2}%
+\contentsline {section}{\numberline {3.6}Macchina di Turing universale e calcolatore}{28}{section.3.6}%
+\contentsline {section}{\numberline {3.7}Risolvibilità di problemi}{28}{section.3.7}%
+\contentsline {subsection}{\numberline {3.7.1}Problema dell'arresto}{28}{subsection.3.7.1}%
+\contentsline {subsection}{\numberline {3.7.2}Insiemi ricorsivi e ricorsivamente numerabili}{29}{subsection.3.7.2}%
+\contentsline {subsubsection}{Approfondimento: Tecnica a "zig-zag"}{31}{subsubsection*.3}%
+\contentsline {subsection}{\numberline {3.7.3}Problemi decidibili e indecidibili}{31}{subsection.3.7.3}%
