@@ -794,8 +794,34 @@
             \begin{definitionbox}{Linguaggi ricorsivi}{}
                 Un linguaggio è \textbf{ricorsivo} se è accettato da una macchina di Turing che termina su ogni input
             \end{definitionbox}
+            \subsection{Sintassi del simulatore}
+            \begin{verbatim}
+                <current state> <read> <write> <dir> <next state>
+            \end{verbatim}
+            \vspace{-1cm}
+            Dove: \begin{itemize}
+                \item \texttt{<current state>}: è lo stato corrente (dove si trova la testina)
+                \item \texttt{<read>}: è il simbolo che viene letto
+                \item \texttt{<write>}: è il simbolo che viene scritto
+                \item \texttt{<dir>}: è la direzione $L$ (Sinistra), $R$ (Destra), $*$ (Nessuna)
+                \item \texttt{<next state>}: è in quale stato deve andare
+            \end{itemize}
             \begin{example}
-                Prendi l'esempio 3.2.4 a pagina 41
+                \textit{Definire la TM che riconosce il linguaggio regolare $L=\{0^n1^m\mid n,m\geq 0\}$}
+                \begin{itemize}
+                    \item Leggiamo tutti i simboli 0 spostandoci a destra
+                    \item Quando troviamo un 1 cambiamo stato e leggiamo tutti i simboli 1 spostandoci a destra
+                    \item Se troviamo $B$ la stringa è accettata, se troviamo 0 la macchina si blocca in uno stato di non accettazione
+                \end{itemize}
+                Usando la sintassi del simulatore:
+                \begin{verbatim}
+                    0 0 0 r 0
+                    0 1 1 r 1
+                    0 _ _ * halt-accept
+                    1 1 1 r 1
+                    1 _ _ * halt-accept
+                \end{verbatim}
+                "\_" è Blank
             \end{example}
             \begin{exercise}
                 Qui metto un esercizio da esame per costruire una macchina di turing dato un linguaggio
@@ -816,7 +842,17 @@
                 \end{itemize}
             \end{itemize}
             \begin{example}
-                Esempio 3.2.6 pagina 43
+                \textit{Definire una TM che calcola la sommaa di due numeri codificati in unario separati da \#, quindi $1^n\#1^m$ deve dare come output $1^{n+m}$}. L'algoritmo sposta semplicemente tutti gli 1 prima di \# alla fine del secondo argomento cancellando alla fine il separatore.
+                \begin{verbatim}
+                    0    1 _ r go_r
+                    0    # _ r halt
+                    go_r 1 1 r go_r
+                    go_r # # r go_r
+                    go_r _ 1 l go_l
+                    go_l 1 1 l go_l
+                    go_l # # l go_l
+                    go_l _ _ r 0
+                \end{verbatim}
             \end{example}
         \section{Tesi di Church-Turing}
             Sebbene le MT non abbiano istruzioni come \texttt{goto} o la possibilità di accedere alla memoria tramite indici come in un linguaggio di programmazione convenzionale, dimostrano una sorprendente potenza espressiva. Concetti come i "salti" possono essere realizzati tramite sequenze di spostamenti elementari della testina sul nastro. Le MT possono essere considerate una versione embrionale dell'architettura di Von Neumann.
@@ -888,9 +924,6 @@
                         \item \textbf{Output}: L'output $\bar{x}$ (una rappresentazione di numero naturale) viene decodificato nel numero $x$
                     \end{itemize}
                 \end{itemize}
-                \begin{example}
-                    
-                \end{example}
                 Le direttive di esecuzione sono non deterministiche (più scelte possibili, ad esempio nell'ordine di valutazione di sotto-espressioni), ma il risultato finale è sempre lo stesso. Questo è perché, come provato per induzione, tutte le funzioni ricorsive primitive sono totali, ovvero definite su ogni possibile argomento e garantiscono sempre la terminazione. Questo è il motivo per cui il meccanismo di ricorsione è descritto come "molto semplice" e sempre terminante, poiché il caso base è zero e la chiamata ricorsiva è sempre effettuata sul predecessore.
                 \begin{definitionbox}{}{}
                     I programmi che calcolano funzioni ricorsive primitive possono essere numerati \textit{effettivamente}.
@@ -1075,5 +1108,62 @@
                         \end{itemize}
                         \item \textbf{Problema semidecidibile}: Un problema di decisione $\mathcal{P}$ è semidecidibile se l'insieme delle sue istanze per cui $\mathcal{P}$ è vero è ricorsivamente enumerabile. Questo significa che esiste un algoritmo che, per le istanze per cui $\mathcal{P}$ è vero, fornisce una risposta \textbf{positiva} in un numero finito di passi; tuttavia, per le istanze per cui $\mathcal{P}$ è falso, l'algoritmo potrebbe anche non terminare
                     \end{itemize}
-
+                    \subsection{Riducibilità}
+                        \begin{definitionbox}{}{}
+                            Dati due problemi $\mathcal{P}$ e $\mathcal{Q}$, diciamo che $\mathcal{P}$ è riducibile a $\mathcal{Q}$, e scriviamo $\mathcal{P}\geq \mathcal{Q}$, se esiste una funzione totale ricorsiva $f:\mathbb{N}\to\mathbb{N}$, detta funzione di riduzione, tale che, per ogni $x\in\mathbb{N},x\in\mathcal{P}$ se e solo se $f(x)\in\mathcal{Q}$
+                        \end{definitionbox}
+                        Questa definizione può essere applicata anche a sottoinsiemi di $N^k$ o $\Sigma^*$, e i problemi possono essere sottoinsiemi di insiemi diversi.\\
+                        Intuitivamente, se $\mathcal{P}$ è riducibile a $\mathcal{Q}$, significa che $\mathcal{Q}$ è "più difficile" (o, più precisamente, "non più facile") di $\mathcal{P}$. Questo perché, dato un algoritmo $M_\mathcal{Q}$ che decide $\mathcal{Q}$, è possibile ottenere un algoritmo $M_\mathcal{P}$ che decide $\mathcal{P}$. $M_\mathcal{P}$ si ottiene eseguendo, a partire dall'input $x$, prima l'algoritmo $M_f$ che calcola $f(x)$, e poi l'algoritmo $M_\mathcal{Q}$ con input $f(x)$. Questo algoritmo $M_\mathcal{P}$ è garantito essere un algoritmo che termina sempre e restituisce 1 se $x \in \mathcal{P}$ e 0 se $x \notin \mathcal{P}$. Una proprietà analoga vale anche per la semidecidibilità.\\
+                        La riducibilità è uno strumento potente per dimostrare proprietà sui problemi: \begin{itemize}
+                            \item Se $\mathcal{Q}$ è ricorsivo (o ricorsivamente enumerabile), allora anche $\mathcal{P}$ è ricorsivo (o ricorsivamente enumerabile)
+                            \item Se $\mathcal{P}$ non è ricorsivo (o non è ricorsivamente enumerabile), allora non può esserlo neanche $\mathcal{Q}$ per il teorema di Post
+                        \end{itemize}
+                        La relazione di riducibilità è riflessiva e transitiva.
+                        \begin{example}
+                            Consideriamo l'insieme $\mathcal{K}=\{k\mid\phi_x(x)\downarrow\}$ e l'insieme $\mathcal{Z}=\{\phi_x \text{ è la funzione costante } 0\}$. Mostriamo che $\mathcal{K}\leq\mathcal{Z}$. Questa implicazione mostra che anche l'insieme $\mathcal{Z}$ è non ricorsivo, ossia non è possibile decidere se un algoritmo restituisce 0 su ogni input.La riduzione consiste nel costruirre una funzione totale e ricorsiva $g:\mathbb{N}\to\mathbb{N}$ che trasforma un input $x$ in un nuovo algoritmo $g(x)$. La funzione $g(x)$ viene costruita come segue:
+                            \begin{itemize}
+                                \item Esegue $\mathcal{M}_x(x)$
+                                \item Se $\mathcal{M}_x(x)$ termina, $g(x)$ restituisce 0
+                                \item Se $\mathcal{M}_x(x)$ non termina, $g(x)$ non termina
+                            \end{itemize}
+                            In questo modo si ha:
+                            $$
+                            \phi_{g(x)}(y)=\begin{cases}
+                                0 & \text{se } x\in\mathcal{K} \Rightarrow g(x)\in\mathcal{Z}\\
+                                \text{indefinito} & \text{altrimenti}\Rightarrow g(x)\notin\mathcal{Z}
+                            \end{cases}
+                            $$
+                            Dato che $\mathcal{K} \leq \mathcal{Z}$ e $\mathcal{K}$ è noto essere un problema non ricorsivo (indecidibile), la riduzione dimostra che anche $\mathcal{Z}$ non è ricorsivo. Questo implica che non è possibile avere un algoritmo che decida se un dato programma restituirà sempre 0 come output per qualsiasi input.
+                        \end{example}
+                    \subsection{Teorema di Rice}
+                        Il teorema di Rice afferma che ogni proprietà "semantica" (estensionale) dei programmi (algoritmi) non è decidibile.
+                        \begin{itemize}
+                            \item \textbf{Proprietà Estensionali $\Pi$}: una proprietà dei programmi (o algoritmi) è detta estensionale se dipende esclusivamente dal \textbf{comportamento input/output} del programma, e non dalla sua implementazione interna o da suo codice specifico. In altre parole, se due programmi calcolano la stessa funzione (cioè hanno lo stesso comportamento), allora decono o entrambi soddisfare la proprietà o entrambi non soddisfarla. Formalmente: $$\forall x,y\in\mathbb{N}\mid (x\in\Pi\land\phi_x=\phi_y)\Rightarrow y\in\Pi$$ 
+                        \end{itemize}        
+                        \begin{theorembox}{Teorema di Rice}{}
+                            Una proprietà estensionale $\Pi$ è ricorsiva $\iff$ è banale.
+                        \end{theorembox}
+                        \begin{demonstration}
+                            \begin{itemize}
+                                \item L'implicazione $\Leftarrow$ è ovvia
+                                \item Per l'implicazione $\Rightarrow$: consideriamo una proprietà $\Pi$ \begin{itemize}
+                                    \item Supponiamo che $\Pi$ non banale
+                                    \item Mostriamo che non può essere ricorsiva attraverso una riduzione dal problema dell'arresto $\mathcal{K}=\{x\mid\phi_x(x)\downarrow\}$, che è noto per essere non ricorsivo (indecidibile), a $\Pi$
+                                    \item L'idea è costruire un algoritmo $g(x)$ che trasforma un programma $x$ in un nuovo programma $g(x)$ tale che $x$ termina su se stesso ($x \in \mathcal{K}$) se e solo se $g(x)$ soddisfa la proprietà estensionale $\Pi$. Se fosse possibile decidere $\Pi$, allora si potrebbe decidere anche $\mathcal{K}$, il che è un assurdo. Questo implica che $\Pi$ non è ricorsiva
+                                \end{itemize}
+                            \end{itemize} 
+                        \end{demonstration}
+            \section{Altri modelli di calcolo}
+                \subsection{Funzioni $\mu$-ricorsive}
+                    Le funzioni $\mu$-ricorsive rappresentano un'estensione del formalismo delle funzioni ricorsive primitive, introdotto per catturare l'intera classe delle funzioni calcolabili, comprese quelle parziali, e a supportare la tesi di Church-Turing.
+                    \begin{itemize}
+                        \item \textbf{Operatore $\mu$ (Minimizzazione)}: \begin{itemize}
+                            \item Data una funzione totale $f: \mathbb{N}^{(n+1)} \to \mathbb{N}$, si definisce la funzione $g: \mathbb{N}^n \to \mathbb{N}$ tramite l'operatore $\mu$ come: $g(x_1, \ldots, x_n) = \mu0 y(f(x_1, \ldots, x_n, y))$
+                            \item Il valore di $g$ è il più piccolo $y$ per cui $f(x_1, \ldots, x_n, y) = 0$, se tale $y$ esiste
+                            \item Se non esiste un $y$ per cui $f(x_1, \ldots, x_n, y) = 0$, allora $g(x_1, \ldots, x_n)$ è indefinito (non termina). Questo rende le funzioni $\mu$-ricorsive capaci di esprimere funzioni parziali, a differenza delle primitive ricorsive che sono sempre totali
+                        \end{itemize}
+                    \end{itemize}
+                    \begin{definitionbox}{}{}
+                        La classe delle funzioni $\mu$-ricorsive è la più piccola classe di funzioni che include le funzioni ricorsive primitive (zero, successore, proiezione) e che è chiusa rispetto alle operazioni di composizione, ricorsione primitiva, e all'operatore $\mu$ (applicato, come detto, a funzioni totali).
+                    \end{definitionbox}
 \end{document}
