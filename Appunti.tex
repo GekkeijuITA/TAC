@@ -363,12 +363,65 @@
                         \item Scriviamo il nuovo automa nella forma $\mathcal{M'}=\langle Q',\Sigma,\delta',q_0,F'\rangle$ dove: \begin{itemize}
                             \item $Q'=Q$ (solitamente)
                             \item $\Sigma$ è l'alfabeto
-                            \item $\delta'$ sarà la nuova tabella le cui righe si troveranno facendo $\delta'(q,\sigma)=\bigcup_{s\in\delta(q,\sigma)}\varepsilon-closure(s)$
+                            \item $\delta'$ sarà la nuova tabella le cui righe si troveranno facendo: $$\delta'(q,\sigma)=\bigcup_{p\in\varepsilon\text{-closure}(q)}\bigcup_{s\in\delta(p,\sigma)}\varepsilon\text{-closure}(s)$$
                             \item $q_0$ stato iniziale (solitamente è lo stesso)
                             \item $F'$ è l'insieme di tutti gli stati che hanno nella propria $\varepsilon$-closure uno stato finale dell'automa originale
                         \end{itemize}
                     \end{enumerate}
                 \end{algorithm}
+                \begin{exercise}
+                    \textit{Si consideri il seguente automa a stati finiti con transizioni silenti:}
+                    \begin{center}
+                        \includegraphics[width=.5\textwidth]{Images/esnfasilente.png}
+                    \end{center}
+                    \begin{itemize}
+                        \item \textit{Si trasformi l'automa in un NFA eliminando le transizioni silenti}: \begin{itemize}
+                            \item Tabelliamo $\delta$ \begin{center}
+                                \begin{tabular}{|c|c|c|c|c|}
+                                    \hline
+                                     & a & b & c & $\varepsilon$ \\
+                                    \hline
+                                    $q_0$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\{q_1,q_4\}$\\
+                                    $q_1$ & $\{q_2\}$ & $\emptyset$ & $\emptyset$ & $\emptyset$ \\
+                                    $q_2$ & $\emptyset$ & $\emptyset$ & $\{q_3\}$ & $\emptyset$ \\
+                                    $q_3$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ \\
+                                    $q_4$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\{q_5,q_6\}$\\
+                                    $q_5$ & $\{q_7\}$ & $\emptyset$ & $\emptyset$ & $\emptyset$ \\
+                                    $q_6$ & $\emptyset$ & $\{q_7\}$ & $\emptyset$ & $\emptyset$ \\
+                                    $q_7$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\{q_0\}$\\
+                                    \hline
+                                \end{tabular}
+                            \end{center}
+                            \item Calcoliamo tutte le $\varepsilon$-closure \begin{itemize}
+                                \item $\varepsilon$-closure($q_0$) = $\{q_0,q_1,q_4,q_5,q_6\}$
+                                \item $\varepsilon$-closure($q_1$) = $\{q_1\}$
+                                \item $\varepsilon$-closure($q_2$) = $\{q_2\}$
+                                \item $\varepsilon$-closure($q_3$) = $\{q_3\}$
+                                \item $\varepsilon$-closure($q_4$) = $\{q_4,q_5,q_6\}$
+                                \item $\varepsilon$-closure($q_5$) = $\{q_5\}$
+                                \item $\varepsilon$-closure($q_6$) = $\{q_6\}$
+                                \item $\varepsilon$-closure($q_7$) = $\{q_7,q_0,q_1,q_4,q_5,q_6\}$
+                            \end{itemize}
+                            \item Costruiamo $\delta'$ \begin{center}
+                                \begin{tabular}{|c|c|c|c|}
+                                    \hline
+                                     & a & b & c \\
+                                    \hline
+                                    $q_0$ & $\{q_0,q_1,q_2,q_4,q_5,q_6,q_7\}$ & $\{q_0,q_1,q_4,q_5,q_6,q_7\}$ & $\emptyset$\\
+                                    $q_1$ & $\{q_2\}$ & $\emptyset$ & $\emptyset$ \\
+                                    $q_2$ & $\emptyset$ & $\emptyset$ & $\{q_3\}$ \\
+                                    $q_3$ & $\emptyset$ & $\emptyset$ & $\emptyset$ \\
+                                    $q_4$ & $\{q_0,q_1,q_4,q_5,q_6,q_7\}$ & $\{q_0,q_1,q_4,q_5,q_6,q_7\}$ & $\emptyset$ \\
+                                    $q_5$ & $\{q_0,q_1,q_4,q_5,q_6,q_7\}$ & $\emptyset$ & $\emptyset$ \\
+                                    $q_6$ & $\emptyset$ & $\{q_0,q_1,q_4,q_5,q_6,q_7\}$ & $\emptyset$ \\
+                                    $q_7$ & $\{q_0,q_1,q_2,q_4,q_5,q_6,q_7\}$ & $\{q_0,q_1,q_4,q_5,q_6,q_7\}$ & $\emptyset$ \\
+                                    \hline
+                                \end{tabular}
+                            \end{center}
+                        \end{itemize}
+                        \item \textit{Si dia un'espressione regolare che denota il linguaggio accettato}: $(a+b)^*ac$
+                    \end{itemize}
+                \end{exercise}
         \section{Minimizzazione di DFA}
             La minimizzazione di un DFA mira a trovare un automa equivalente, che accetti lo stesso linguaggio, ma con il numero minimo di stati.
             \begin{itemize}
@@ -614,9 +667,17 @@
                     \item Per pila vuota: $L(\mathcal{M})=\{u\in\Sigma^*\mid\langle q_0,u,Z\rangle\to^*\langle\_,\varepsilon,\varepsilon\rangle\}$
                     \item Per stati finali: $L(\mathcal{M})=\{u\in\Sigma^*\mid\langle q_0,u,Z\rangle\to^*\langle q,\varepsilon,\_\rangle,q\in F\}$
                 \end{itemize}
-                Usiamo la wildcar \_ per sottolineare il fatto che lo stato non è rilevante.\\
+                Usiamo la wildcard \_ per sottolineare il fatto che lo stato non è rilevante.\\
                 \textit{Le due definizioni sono equivalenti: se il linguaggio $L$ è riconosciuto da un qualche PDA secondo la prima definizione, allora esiste anche un PDA che lo riconosce secondo l'altra e viceversa}.
             \end{itemize}
+            \begin{exercise}
+                \textit{Si consideri il linguaggio $L=\{a^nb^mc^n\mid m \text{ dispari}\}$. Si dia un'automa a pila che riconosce il linguaggio, spiegando su quale idea intuitiva è basato.}
+                L'automa a pila quindi deve accettare stringhe, ad esempio, nel formato: aabcc
+                \begin{center}
+                    \includegraphics[width=.5\textwidth]{Images/esautomaapila.png}
+                \end{center} 
+                L'idea è quella di salvarci soltanto quante a ci sono nella stringa perchè il numero di c è uguale a quello delle a. Le b invece ci importa solo che siano dispari e per fare ciò dobbiamo obbligare l'automa a prendere (oltre alla b di cambio stato che quindi siamo a 1) due b "alla volta" in questo modo avremo sempre b dispari. Per le c invece eseguiamo il pop dalla pila di tutte le a e in questo modo ne consumeremo il numero giusto e poi svuotiamo completamente la pila quando leggiamo l'ultima c.
+            \end{exercise}
             \begin{definitionbox}{Automa a pila deterministico (DPDA)}{}
                  E' una tupla $\mathcal{M} = \langle Q, \Sigma, \Gamma, \delta, q_0, Z, F \rangle$ dove: \begin{itemize}
                     \item $Q$, $\Sigma$, $q_0$ e $F$ sono come per gli automi a stati finiti
@@ -824,7 +885,26 @@
                 "\_" è Blank
             \end{example}
             \begin{exercise}
-                Qui metto un esercizio da esame per costruire una macchina di turing dato un linguaggio
+                \textit{Si dia una macchina di Turing che, data in input una stringa di 0 e 1, produca in output la stringa privata degli 0. Quindi, per esempio, data la stringa 01100100, produce in output la stringa 111. \textbf{E' assolutamente necessario dare prima una descrizione a parole dell'algoritmo}, e solo successivamente la matrice di transizione, preferibilmente usando nomi significativi per gli stati.}\\
+                \begin{itemize}
+                    \item \textbf{Descrizione algoritmo}: L'idea è quella di spostare a sinistra tutti gli 1 e a destra avere tutti gli 0, una volta che incontreremo un blank a destra sappiamo che siamo arrivati alla fine della stringa, quindi torniamo indietro e poi cancelliamo tutti gli 0 fino a riincontrare il blank.
+                    \item \textbf{MT}: \begin{verbatim}
+                    s0   0 0 r gor
+                    s0   1 1 r gor
+                    gor  1 0 l gol // Facciamo il bit-flip
+                    gor  0 0 r gor // Andiamo a destra finchè non c'è 1
+                    gor  _ _ l goll // Blank fine stringa torniamo indietro
+                    gol  0 0 l gol // Andiamo a sinistra finchè non c'è 1 o _
+                    gol  1 1 r cs // Ultimo 1 spostato, concateniamo 1
+                    gol  _ _ r cs // Inizio stringa raggiunto, concateniamo 1
+                    cs   0 1 r gor // "Concatenazione"
+                    goll 0 0 l goll // Sinistra finchè non c'è 1
+                    goll 1 1 r cb // 1 trovato, iniziamo a cancellare 0
+                    goll _ _ r cb // _ trovato, iniziamo a cancellare 0
+                    cb   0 _ r cb // se 0 cancelliamo con _
+                    cb   _ _ * halt // fine stringa raggiunta
+                    \end{verbatim}
+                \end{itemize}
             \end{exercise}        
         \section{Funzioni T-calcolabili}
             Le funzioni T-calcolabili sono quelle funzioni che possono essere calcolate da una Macchina di Turing (TM).\\
@@ -1166,4 +1246,52 @@
                     \begin{definitionbox}{}{}
                         La classe delle funzioni $\mu$-ricorsive è la più piccola classe di funzioni che include le funzioni ricorsive primitive (zero, successore, proiezione) e che è chiusa rispetto alle operazioni di composizione, ricorsione primitiva, e all'operatore $\mu$ (applicato, come detto, a funzioni totali).
                     \end{definitionbox}
+        \chapter{Esercizi d'esame}
+        \begin{exercise}
+            \textit{Dire se le seguenti affermazioni sono vere o false motivando la risposta.}
+            \begin{enumerate}
+                \item La proprietà dei programmi corrispondente all'insieme $\{x\mid x\leq 100\}$ non è estensionale. $\rightarrow$ \textbf{Vero} perchè una proprietà è estensionale se dipende solo dal comportamento del programma.
+                \item La proprietà dei programmi corrispondente all'insieme $\{x\mid x\leq 100\}$ è ricorsiva. $\rightarrow$ \textbf{Vero}, basta verificare se $x\leq 100$
+                \item La proprietà dei programmi corrispondente all'insieme $\{x\mid\phi_x(0)\leq 100\}$ è ricorsivamente enumerabile. $\rightarrow$ \textbf{Vero} perchè il programma termina per quelle $x$ tali per cui $\phi_x(0)$ termina e restituisce un valore $\leq 100$ altrimenti non termina.
+            \end{enumerate}
+        \end{exercise}
+        \begin{exercise}
+        \textit{Supponiamo di avere un predicato decidibile $Q$ su coppie di numeri naturali $Q(x,y)$. Si consideri il predicato $P$ sui numeri naturali tale che $P(x)$ è vero se e solo se esiste $y$ tale che $Q(x,y)$ è falso. Si descriva un algoritmo di semidecisione per $P$.}
+        \begin{verbatim}
+            input x;
+            y = 0
+            while(true) {
+                if(Q(x,y)==false) return true;
+                y++
+            }
+        \end{verbatim}
+        \end{exercise}
+        \begin{exercise}
+            \textit{Siano $P$ e $Q$ due insiemi r.e., e indichiamo con $A^k_P$ l'esecuzione di $k$ passi dell'algoritmo che semidecide $P$, e analogamente per $Q$. Si descriva in pseudocodice un algoritmo che semidecide $\{x\mid x\notin P\Rightarrow x+1 \in Q\}$.}
+            \begin{verbatim}
+                input x;
+                k = 0
+                while(true) {
+                    if(Akp(x)==1) return 1
+                    if(Akq(x+1)==1) return 1
+                    k++
+                }
+            \end{verbatim}
+        \end{exercise}
+        \begin{exercise}
+            \textit{Sia $f:\mathbb{N}\to\mathbb{N}$ una funzione ricorsiva e $A$ un insieme ricorsivamente enumerabile, allora $\{x\mid f(x)\in A\}$ è ricorsivamente enumerabile? Giustificare la riposta.}\\
+            Sappiamo che $f$ termina o può non terminare (definizione di ricorsivo), $A$ è r.e. quindi per definizione termina o non termina. Quindi se $f(x)$ termina, bisogna controllare se il valore restituito fa terminare o no $A$. Nel caso in cui $f(x)$ non termini, anche $A$ non termina. Quindi si, l'insieme dato è ricorsivamente enumerabile.
+        \end{exercise}
+        \begin{exercise}
+            \textit{Sia $f:\mathbb{N}\to\mathbb{N}$ una funzione ricorsiva e $A$ un insieme ricorsivo, allora $\{f(x)\mid x\in A\}$ è ricorsivamente enumerabile? Giustificare la risposta.}\\
+            Si perchè per definizione l'immagine di $f$ è ricorsivamente enumerabile
+        \end{exercise}
+        \begin{exercise}
+            \textit{L'insieme $A=\{x\mid\phi_x(x)\uparrow \text{ oppure } \phi_x(x)=5\}$, ossia l'insieme dei programmi che su se stessi non terminano oppure restituiscono 5, è ricorsivamente enumerabile? Giustificare accuratamente la risposta.}\\
+            Usiamo il teorema di Post quindi:
+            \begin{itemize}
+                \item $\bar{A}=\{x\mid\phi_x(x)\downarrow\text{ e }\phi_x(x)\neq 5\}$ è ricorsivamente enumerabile
+                \item Per determinare se $\bar{A}$ è ricorsiva, troviamo un insieme contenuto in $\bar{A}$ ovvero $K=\{x\mid\phi_x(x)\downarrow\}$, per definizione sappiamo che l'insieme $K$ non è ricorsivo perchè termina sempre. Dobbiamo determinare se c'è una funzione di riducibilità $f(x)$ da $K$ a $\bar{A}$ e per fare ciò costruiamo un algoritmo $M_{f(x)}=\{x\in K \iff f(x)\in\bar{A}\}$ e sappiamo che se termina $\phi_x(x)\neq 5$ altrimenti non termina. In questo modo dimostriamo che $K$ è riducibile a $\bar{A}$ e visto che $K$ non è ricorsivo anche $\bar{A}$ non lo è e quindi, per definizione $A$ non è ricorsivamente enumerabile.
+            \end{itemize}
+        \end{exercise}
 \end{document}

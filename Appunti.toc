@@ -5,34 +5,35 @@
 \contentsline {chapter}{\numberline {2}Automi a stati finiti}{4}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Linguaggi regolari}{4}{section.2.1}%
 \contentsline {subsection}{\numberline {2.1.1}Automi a stati finiti}{4}{subsection.2.1.1}%
-\contentsline {section}{\numberline {2.2}Minimizzazione di DFA}{11}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}Algoritmo}{11}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2}Espressioni regolari}{14}{subsection.2.2.2}%
-\contentsline {section}{\numberline {2.3}Proprietà dei linguaggi regolari}{14}{section.2.3}%
-\contentsline {subsection}{\numberline {2.3.1}Pumping Lemma}{14}{subsection.2.3.1}%
-\contentsline {section}{\numberline {2.4}Automi a pila}{15}{section.2.4}%
-\contentsline {section}{\numberline {2.5}Linguaggi Context-Free}{17}{section.2.5}%
-\contentsline {subsection}{\numberline {2.5.1}Grammatiche Context-Free}{17}{subsection.2.5.1}%
-\contentsline {subsection}{\numberline {2.5.2}Proprietà}{18}{subsection.2.5.2}%
-\contentsline {subsubsection}{Proprietà di Chiusura}{20}{subsubsection*.2}%
-\contentsline {chapter}{\numberline {3}Teoria della calcolabilità}{21}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Macchine di Turing}{21}{section.3.1}%
-\contentsline {subsection}{\numberline {3.1.1}Sintassi del simulatore}{22}{subsection.3.1.1}%
-\contentsline {section}{\numberline {3.2}Funzioni T-calcolabili}{23}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Tesi di Church-Turing}{24}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}La tesi}{24}{subsection.3.3.1}%
-\contentsline {section}{\numberline {3.4}Nozione di algoritmo e funzioni ricorsive primitive}{24}{section.3.4}%
-\contentsline {subsection}{\numberline {3.4.1}Funzioni Ricorsive Primitive $\mathcal {PR}$}{24}{subsection.3.4.1}%
-\contentsline {section}{\numberline {3.5}Numerazione algoritmica delle funzioni ricorsive}{27}{section.3.5}%
-\contentsline {subsection}{\numberline {3.5.1}Osservazioni}{28}{subsection.3.5.1}%
-\contentsline {subsection}{\numberline {3.5.2}Corollari}{28}{subsection.3.5.2}%
-\contentsline {section}{\numberline {3.6}Macchina di Turing universale e calcolatore}{28}{section.3.6}%
-\contentsline {section}{\numberline {3.7}Risolvibilità di problemi}{29}{section.3.7}%
-\contentsline {subsection}{\numberline {3.7.1}Problema dell'arresto}{29}{subsection.3.7.1}%
-\contentsline {subsection}{\numberline {3.7.2}Insiemi ricorsivi e ricorsivamente numerabili}{30}{subsection.3.7.2}%
-\contentsline {subsubsection}{Approfondimento: Tecnica a "zig-zag"}{31}{subsubsection*.3}%
-\contentsline {subsection}{\numberline {3.7.3}Problemi decidibili e indecidibili}{31}{subsection.3.7.3}%
-\contentsline {subsection}{\numberline {3.7.4}Riducibilità}{32}{subsection.3.7.4}%
-\contentsline {subsection}{\numberline {3.7.5}Teorema di Rice}{33}{subsection.3.7.5}%
-\contentsline {section}{\numberline {3.8}Altri modelli di calcolo}{34}{section.3.8}%
-\contentsline {subsection}{\numberline {3.8.1}Funzioni $\mu $-ricorsive}{34}{subsection.3.8.1}%
+\contentsline {section}{\numberline {2.2}Minimizzazione di DFA}{12}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Algoritmo}{12}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Espressioni regolari}{15}{subsection.2.2.2}%
+\contentsline {section}{\numberline {2.3}Proprietà dei linguaggi regolari}{15}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Pumping Lemma}{15}{subsection.2.3.1}%
+\contentsline {section}{\numberline {2.4}Automi a pila}{16}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Linguaggi Context-Free}{19}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}Grammatiche Context-Free}{19}{subsection.2.5.1}%
+\contentsline {subsection}{\numberline {2.5.2}Proprietà}{20}{subsection.2.5.2}%
+\contentsline {subsubsection}{Proprietà di Chiusura}{22}{subsubsection*.2}%
+\contentsline {chapter}{\numberline {3}Teoria della calcolabilità}{23}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Macchine di Turing}{23}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Sintassi del simulatore}{24}{subsection.3.1.1}%
+\contentsline {section}{\numberline {3.2}Funzioni T-calcolabili}{26}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Tesi di Church-Turing}{26}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}La tesi}{26}{subsection.3.3.1}%
+\contentsline {section}{\numberline {3.4}Nozione di algoritmo e funzioni ricorsive primitive}{27}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Funzioni Ricorsive Primitive $\mathcal {PR}$}{27}{subsection.3.4.1}%
+\contentsline {section}{\numberline {3.5}Numerazione algoritmica delle funzioni ricorsive}{30}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Osservazioni}{30}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Corollari}{30}{subsection.3.5.2}%
+\contentsline {section}{\numberline {3.6}Macchina di Turing universale e calcolatore}{31}{section.3.6}%
+\contentsline {section}{\numberline {3.7}Risolvibilità di problemi}{31}{section.3.7}%
+\contentsline {subsection}{\numberline {3.7.1}Problema dell'arresto}{31}{subsection.3.7.1}%
+\contentsline {subsection}{\numberline {3.7.2}Insiemi ricorsivi e ricorsivamente numerabili}{32}{subsection.3.7.2}%
+\contentsline {subsubsection}{Approfondimento: Tecnica a "zig-zag"}{34}{subsubsection*.3}%
+\contentsline {subsection}{\numberline {3.7.3}Problemi decidibili e indecidibili}{34}{subsection.3.7.3}%
+\contentsline {subsection}{\numberline {3.7.4}Riducibilità}{35}{subsection.3.7.4}%
+\contentsline {subsection}{\numberline {3.7.5}Teorema di Rice}{36}{subsection.3.7.5}%
+\contentsline {section}{\numberline {3.8}Altri modelli di calcolo}{37}{section.3.8}%
+\contentsline {subsection}{\numberline {3.8.1}Funzioni $\mu $-ricorsive}{37}{subsection.3.8.1}%
+\contentsline {chapter}{\numberline {4}Esercizi d'esame}{38}{chapter.4}%
