@@ -599,7 +599,7 @@
             \subsection{Pumping Lemma}
                 \begin{theorembox}{Pumping Lemma}{}
                     Sia $L$ un linguaggio regolare. Allora esiste una costante $n\in\mathbb{N}$ (detta "lunghezza di pompaggio" o "numero di stati del DFA") tale che, per ogni $z\in L$ con $|z|\geq n$, possiamo decomporre $z$ come $uvw$ in modo che: \begin{itemize}
-                        \item $|uv|\geq n$ (la porzione "pompabile" $v$ deve trovarsi entro i primi $n$ simboli della stringa)
+                        \item $|uv|\leq n$ (la porzione "pompabile" $v$ deve trovarsi entro i primi $n$ simboli della stringa)
                         \item $|v|>0$ (la porzione "pompabile" non deve essere vuota)
                         \item per ogni $i\geq 0$ si ha che $uv^iw\in L$ ($v$ può essere ripetuta $i$ volte, inclusa l'eliminazione $i=0$, e la stringa rimarrà nel linguaggio)
                     \end{itemize}
@@ -733,7 +733,7 @@
             \begin{definitionbox}{Pumping Lemma}{}
                 Se $L$ è un linguaggio CF, esiste una costante $n\in\mathbb{N}$ (lunghezza di pompaggio) tale che, per ogni $z\in L$ con $|z|\geq n$ può essere decomposta in $uvwxy$ in modo che:
                 \begin{itemize}
-                    \item $|vwx|\geq n$
+                    \item $|vwx|\leq n$
                     \item $|vx|>0$
                     \item $\forall i\geq 0$ si ha che la stringa $uv^iwx^iy\in L$
                 \end{itemize} 
