@@ -1300,9 +1300,81 @@
                 \includegraphics[width=0.5\textwidth]{Images/nfaluglio2022.png}
             \end{center}
             \begin{enumerate}
-                \item \textit{Si diano tutte le computazioni possibili per la stringa 'abab' e si spieghi se la stringa è riconosciuta e perchè} 
-                \item \textit{Si descriva il linguaggio riconosciuto}
-                \item \textit{Si scriva l'automa in formato tabellare e lo si trasformi in un automa deterministico}
+                \item \textit{Si diano tutte le computazioni possibili per la stringa 'abab' e si spieghi se la stringa è riconosciuta e perchè}: \begin{itemize}
+                    \item $\langle q_0,\text{abab}\rangle\to\langle q_1,\text{bab}\rangle\to\langle q_1,\text{ab}\rangle\to\langle q_2,\text{b}\rangle\to\langle q_2,\varepsilon\rangle$
+                    \item $\langle q_0,\text{abab}\rangle\to\langle q_0,\text{bab}\rangle\to\langle q_0,\text{ab}\rangle\to\langle q_0,\text{b}\rangle\to\langle q_0,\varepsilon\rangle$
+                    \item $\langle q_0,\text{abab}\rangle\to\langle q_0,\text{bab}\rangle\to\langle q_0,\text{ab}\rangle\to\langle q_1,\text{b}\rangle\to\langle q_1,\varepsilon\rangle$
+                    \item $\langle q_0,\text{abab}\rangle\to\langle q_1,\text{bab}\rangle\to\langle q_1,\text{ab}\rangle\to\langle q_1,\text{b}\rangle\to\langle q_1,\varepsilon\rangle$
+                \end{itemize} 
+                E' riconosciuta perchè esiste una computazine che dallo stato iniziale $q_0$ arriva allo stato finale $q_2$.
+                \item \textit{Si descriva il linguaggio riconosciuto}: Il linguaggio è definito dalle stringhe che contengono almeno due 'a'
+                \item \textit{Si scriva l'automa in formato tabellare e lo si trasformi in un automa deterministico}: \begin{enumerate}
+                    \item \begin{tabular}{|c | c | c |}
+                        \hline
+                        & a & b \\
+                        $\to q_0$ & $\{q_0,q_1\}$ & $q_0$ \\
+                        $q_1$ & $\{q_1,q_2\}$ & $q_1$ \\
+                        $*q_2$ & $q_2$ & $q_2$ \\
+                        \hline
+                    \end{tabular}
+                    \item \begin{itemize}
+                        \item $Q_D=\{\emptyset, \{q_0\},\{q_1\},\{q_2\},\{q_0,q_1\},\{q_1,q_2\},\{q_0,q_2\},\{q_0,q_1,q_2\}\}$
+                        \item $F_D=\{\{q_2\},\{q_1\},\{q_2\},\{q_0,q_2\},\{q_0,q_1,q_2\}\}$
+                        \item \begin{tabular}{| c | c | c |}
+                            \hline
+                            & a & b \\
+                            $\to q_0$ & $\{q_0,q_1\}$ & $q_0$\\
+                            $\{q_0,q_1\}$ & $\{q_0,q_1,q_2\}$ & $\{q_0,q_1\}$\\
+                            $*\{q_0,q_1,q_2\}$ & $\{q_0,q_1,q_2\}$ & $\{q_0,q_1,q_2\}$\\
+                            \hline
+                        \end{tabular}
+                    \end{itemize}
+                \end{enumerate}
             \end{enumerate}
+        \end{exercise}
+        \begin{exercise}
+            \textit{Si consideri la seguente macchina di Turing usata come riconoscitore ($q_3$ è l'unico stato finale)}
+            \begin{center}
+                \includegraphics[width=.5\textwidth]{Images/tmluglio2022.png}
+            \end{center}
+            \begin{itemize}
+                \item \textit{Si descriva la computazione che ha come configurazione iniziale $\langle \varepsilon,q_0,\text{baba}\rangle$}: $$
+                \langle \varepsilon,q_0,\text{baba}\rangle\to \langle \text{b},q_0,\text{aba}\rangle\to \langle \text{ba},q_1,\text{ba}\rangle\to \langle \text{bab},q_1,\text{a}\rangle\to \langle \text{baba},q_2,\varepsilon\rangle\to \langle \text{babaB},q_3,\varepsilon\rangle
+                $$
+                \item \textit{Si descriva la computazione che ha come configurazione iniziale $\langle \varepsilon,q_0,\text{babb}\rangle$}: $$
+                \langle \varepsilon,q_0,\text{babb}\rangle\to \langle \text{b},q_0,\text{abb}\rangle\to \langle \text{ba},q_1,\text{bb}\rangle\to \langle \text{bab},q_1,\text{b}\rangle\to \langle \text{babb},q_1,\varepsilon\rangle\to \langle \text{babaB},q_1,\varepsilon\rangle\to\ldots
+                $$
+                \item \textit{Si descriva il linguaggio accettato dalla macchina}: Il linguaggio accettato è l'insieme di stringhe che hanno almeno due 'a'
+                \item \textit{Questo linguaggio è ricorsivo?}: E' ricorsivo perchè per qualsiasi input passiamo alla MT terminerà sempre
+            \end{itemize}
+        \end{exercise}
+        \begin{exercise}
+            \textit{Dire se le seguenti affermaizoni sono vere o false motivando la risposta.}
+            \begin{enumerate}
+                \item Sia $\Pi\subseteq\mathbb{N}$ un insieme finito non vuoto, allora la proprietà $\Pi$ non è estensionale. $\rightarrow$ Vero, una proprietà estensionale non banale (non vuota) è un insieme infinito.
+                \item Se un insieme $A\subseteq\mathbb{N}$ r.e., e non ricorsivo, non può essere $\bar{A}\leq A$. $\rightarrow$ Vero, per il teorema di Post se $\bar{A}$ fosse r.e. allora anche $A$ sarebbe ricorsivo, ma non lo è.
+            \end{enumerate}
+        \end{exercise}
+        \begin{exercise}
+            \textit{Si provi che $\mathcal{P}=\{x\mid\phi_x(y)=5 \text{ per qualche }y\leq 5\}$ è riducibile a $\mathcal{Q}=\{x\mid\phi_x(y)=5 \text{ per ogni } y\leq 5\}$, ossia che il problema di determinare se un algoritmo restituisce 5 su almeno un input $\leq 5$ è riducibile al problema di determinare se un algoritmo restituisce 5 su tutti gli input $\leq 5$.}\\
+            Per dimostrarlo troviamo una funzione di riduzione costruita in questo modo:
+            $$
+            g(x)=\begin{cases}
+                5 & \text{se } x\in\mathcal{P}\Rightarrow g(x)\in\mathcal{Q}\\
+                \text{indefinito} & \text{altrimenti}\Rightarrow g(x)\notin\mathcal{Q}
+            \end{cases}
+            $$
+        \end{exercise}
+        \begin{exercise}
+            \textit{Si considerino programmi che prendono in input una coppia di numeri naturali e restituiscono in output un numero naturale. Per ognuna delle seguenti affermazioni, si dica se è vera o falsa, motivando la risposta.}
+            \begin{itemize}
+                \item L'insieme dei programmi che su nessuna coppia $\langle x,y\rangle$ restituiscono $x$ o $y$ è ricorsivo. $\rightarrow$ Falso, è una proprietà estensionale non banale, quindi per il teorema di Rice non è ricorsiva
+                \item L'insieme dei programmi che su nessuna coppia $\langle x,y\rangle$ restituiscono $x$ o $y$ è ricorsivamente enumerabile. $\rightarrow$ Vero, $\bar{A}=\{\text{su qualche coppia } \langle x,y\rangle \text{ restituiscono } x \text{ o } y\}$, usando la tecnica a zigzag trovo prima o poi un caso in cui mi restituisce $x$ o $y$, quindi è r.e.
+                \item L'insieme dei programmi che su qualche coppia $\langle x,y\rangle$ restituiscono $x$ in meno di $y$ passi è r.e. $\rightarrow$ Vero, basta eseguire per ogni coppia $\langle x,y\rangle$ il programma fino a $y$ passi e vedere se c'è almeno una coppia che restituisce $x$.
+            \end{itemize}
+        \end{exercise}
+        \begin{exercise}
+        \textit{Si consideri la definizione di proprietà estensionale. In base alla definizione, le proprietà banali ($\emptyset$ e $\mathbb{N}$) sono estensionali. Si spieghi perchè, per ognuno dei due casi.}\\
+        Per ogni $x,y\in\mathbb{N}$: nel caso di $\emptyset$, si ha $x\notin\emptyset$ e quindi l'implicazione vale essendo la premessa false; nel caso di $\mathbb{N}$, si ha $y\in\mathbb{N}$, e quindi l'implicazione vale essendo la conseguenza vera. 
         \end{exercise}
 \end{document}
