@@ -1,0 +1,100 @@
+\documentclass[12pt, a4paper]{report}
+% Begin imports
+\usepackage{geometry}
+\geometry{margin=2cm}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[italian]{babel}
+\usepackage{amsthm}
+\usepackage[most]{tcolorbox}
+\usepackage{xcolor}
+\usepackage[colorlinks=true, linkcolor=blue]{hyperref}
+% End imports
+
+% Begin definitions
+    \newtcbtheorem[auto counter,number within=section]{definitionbox}{Definizione}{
+        colback=blue!5!white,
+        colframe=blue!75!black,
+        fonttitle=\bfseries,
+        boxsep=5pt,
+        arc=5pt,
+        boxrule=1pt,
+        title={Definizione}
+    }{def}
+
+    \tcbset{
+        example/.style={
+            colback=gray!5!white, 
+            colframe=gray!75!black,
+            boxsep=5pt,
+            arc=5pt,
+            boxrule=1pt,
+            title={\textbf{Esempio}}
+        }
+    }
+    
+    \newenvironment{example}[1][]{\begin{tcolorbox}[example, #1]}{\end{tcolorbox}}
+% End definitions
+
+% Begin title page
+\title{Note TAC}
+\author{}
+\date{}
+% End title page
+
+\begin{document}
+\maketitle
+\tableofcontents
+\chapter{Preliminari}
+\section{Alfabeti, stringhe, linguaggi}
+    \begin{definitionbox}{Alfabeto}{}
+        Un \textit{alfabeto} ($\Sigma$) è un insieme finito \textbf{non vuoto} di oggetti detti \textit{simboli} ($\sigma$)
+    \end{definitionbox}
+    \begin{definitionbox}{Stringa}{}
+        Un stringa $u$ su un alfabeto $\Sigma$ è una funzione totale da $\left[1,n\right]$ in $\Sigma$ per qualche $n\in\mathbb{N}$; $n$ si dice lunghezza di $u$ e si indica con $\left|u\right|$.\\
+        \textbf{Approfondimento}:
+        \begin{itemize}
+            \item Funzione totale: funzione che per ogni input c'è sempre un output;
+            \item Funzione stringa: $i\to\sigma$ con $i\in\mathbb{N}$ posizione nella stringa. 
+        \end{itemize} 
+    \end{definitionbox}
+    L'unica stringa $u$ con $\left|u\right|=0$ si chiama \underline{stringa} vuota e si indica con $\varepsilon$.\\
+    L'insieme di tutte le possibili stringhe su $\Sigma$ si indica con $\Sigma^*$ e l'insieme di tutte le possibili stringhe non vuote su $\Sigma$ si indica con $\Sigma^+$. Notiamo che $\Sigma^*$ è sempre un insieme infinito perchè non si ha un limite di lunghezza delle stringhe.
+    \begin{definitionbox}{Linguaggio}{}
+        Un linguaggio $L$ è un insieme di stringhe selezionate da $\Sigma^*$ (ovvero è sottoinsieme di $\Sigma^*$).
+    \end{definitionbox}
+    L'insieme vuoto $\emptyset$  e l'insieme costituito solo dalla stringa vuota $\{\varepsilon\}$ sono linguaggi su \textbf{qualunque} alfabeto.
+    \newpage
+    \subsection{Operazioni su stringhe}
+        Siano $u$ e $v$ stringhe di lunghezza $n$ ed $m$ rispettivamente
+        \begin{definitionbox}{Concatenazione}{}
+            $u\cdot v$ è la stringa di lunghezza $n+m$ definita da:
+            $$
+                (u\cdot v)(k)=\begin{cases}
+                    u(k) & \text{se } 1\leq k\leq n\\
+                    v(k-n) & \text{se } n<k\leq n+m\\
+                \end{cases}
+            $$
+            E' un'operazione associativa e ha come identità la stringa vuota ($u\cdot\varepsilon=u$), si tratta quindi di un monoide.
+        \end{definitionbox}
+        \begin{definitionbox}{Ripetizione}{}
+            $u^n$ (stringa $u$ ripetuta $n$ volte) per $n\geq 0$ è definita induttivamente da $u^0=\varepsilon,u^{n+1}=u\cdot u^n$
+        \end{definitionbox}
+    \subsection{Operazioni su linguaggi}
+        Siano $L$ e $L'$ linguaggi
+        \begin{definitionbox}{Concatenazione}{}
+            $L\cdot L'=\{u\cdot v\mid u\in L,v\in L'\}$, ovvero: la concatenazione è l'insieme di tutte le possibili combinazioni di stringhe.\\
+            Questa operazione è associativa e ha come identità l'insieme $\{\varepsilon\}$ mentre l'insieme vuoto costituisce uno zero dell'operazione ($L\cdot\emptyset= \emptyset\cdot L=\emptyset$)
+        \end{definitionbox} 
+        \begin{example}{}
+            \begin{itemize}
+                \item $L=\{a,ab\}$
+                \item $L'=\{b,ba\}$
+            \end{itemize}
+            $LL'=\{ab,aba,abb,abba\}$
+        \end{example} 
+        \begin{definitionbox}{Ripetizione}{}
+            $L^n$ per $n\geq 0$  è definito induttivamente da $L^0=\{\varepsilon\},L^{n+1}=L\cdot L^n$.\\
+            La chiusura di Kleene $L^*$ è definita da $L^*=\bigcup_{n\geq 0}L^n$, e la chiusura positiva $L^+$  da $L^+=\bigcup_{n>0}L^n$.
+        \end{definitionbox}  
+\end{document}
